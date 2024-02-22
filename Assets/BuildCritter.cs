@@ -17,6 +17,7 @@ public class critterBuilder : MonoBehaviour
 
     public void CreateCritter(int speed, int sense, int breed, GameObject template)
     {
+
         // get all child components of the critter template that have the partPreview tag
         List<GameObject> partSections = new();
         Transform[] transform = template.GetComponentsInChildren<Transform>();
@@ -79,11 +80,13 @@ public class critterBuilder : MonoBehaviour
         // Adjust hitbox size based on sprite size
         //double size = speed + sense + breed;
         if(template.GetComponent<BoxCollider2D>()){
-            //template.GetComponent<Rigidbody2D>().isKinematic = true;
-            float y_hitbox = (float) Math.Ceiling((double)size %3);
+            float y_hitbox = (float) Math.Floor((double)size/3);
             template.GetComponent<BoxCollider2D>().size = new Vector3(3, y_hitbox, 1);
-            float offset = 3 - y_hitbox;
+            float offset = 0.5f*(3 - y_hitbox); //3 - y_hitbox
             template.GetComponent<BoxCollider2D>().offset = new Vector2(0, offset);
+
+            Debug.Log(template.GetComponent<BoxCollider2D>().offset);
+            Debug.Log(template.GetComponent<BoxCollider2D>().size);
 
         }
         

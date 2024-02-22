@@ -15,7 +15,6 @@ public class MainMenu : MonoBehaviour
     public TextMeshProUGUI senseText;
     public TextMeshProUGUI breedText;
 
-
     public critterBuilder critterBuilder;
 
     public GameObject critterTemplate;
