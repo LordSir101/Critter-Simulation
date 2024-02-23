@@ -7,7 +7,7 @@ public class CritterSpawner : MonoBehaviour
     public critterBuilder critterBuilder;
     public GameObject critterTemplate;
 
-    private int numCrittersToSpawn = 10;
+    private int numCrittersToSpawn = 1;
     void Start()
     {
         for(int i = 0; i < numCrittersToSpawn; i++){

@@ -764,6 +764,9 @@
     <Reference Include="Unity.Collections">
         <HintPath>C:\Users\Tyler\Documents\CodeStuff\CritterSim\Critter Sim\Library\ScriptAssemblies\Unity.Collections.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.AdaptivePerformance.Google.Android">
+        <HintPath>C:\Users\Tyler\Documents\CodeStuff\CritterSim\Critter Sim\Library\ScriptAssemblies\Unity.AdaptivePerformance.Google.Android.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.2D.SpriteShape.Runtime">
         <HintPath>C:\Users\Tyler\Documents\CodeStuff\CritterSim\Critter Sim\Library\ScriptAssemblies\Unity.2D.SpriteShape.Runtime.dll</HintPath>
     </Reference>
@@ -779,6 +782,9 @@
     <Reference Include="Unity.Profiling.Core">
         <HintPath>C:\Users\Tyler\Documents\CodeStuff\CritterSim\Critter Sim\Library\ScriptAssemblies\Unity.Profiling.Core.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.AdaptivePerformance.Samsung.Android">
+        <HintPath>C:\Users\Tyler\Documents\CodeStuff\CritterSim\Critter Sim\Library\ScriptAssemblies\Unity.AdaptivePerformance.Samsung.Android.dll</HintPath>
+    </Reference>
     <Reference Include="PsdPlugin">
         <HintPath>C:\Users\Tyler\Documents\CodeStuff\CritterSim\Critter Sim\Library\ScriptAssemblies\PsdPlugin.dll</HintPath>
     </Reference>
@@ -788,14 +794,23 @@
     <Reference Include="Unity.Burst">
         <HintPath>C:\Users\Tyler\Documents\CodeStuff\CritterSim\Critter Sim\Library\ScriptAssemblies\Unity.Burst.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.AdaptivePerformance.Google.Android.Editor">
+        <HintPath>C:\Users\Tyler\Documents\CodeStuff\CritterSim\Critter Sim\Library\ScriptAssemblies\Unity.AdaptivePerformance.Google.Android.Editor.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.Timeline.Editor">
         <HintPath>C:\Users\Tyler\Documents\CodeStuff\CritterSim\Critter Sim\Library\ScriptAssemblies\Unity.Timeline.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.VisualScripting.Shared.Editor">
         <HintPath>C:\Users\Tyler\Documents\CodeStuff\CritterSim\Critter Sim\Library\ScriptAssemblies\Unity.VisualScripting.Shared.Editor.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.AdaptivePerformance.Simulator.Google.Extension">
+        <HintPath>C:\Users\Tyler\Documents\CodeStuff\CritterSim\Critter Sim\Library\ScriptAssemblies\Unity.AdaptivePerformance.Simulator.Google.Extension.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.AdaptivePerformance">
         <HintPath>C:\Users\Tyler\Documents\CodeStuff\CritterSim\Critter Sim\Library\ScriptAssemblies\Unity.AdaptivePerformance.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.AdaptivePerformance.Simulator.VRR.Extension">
+        <HintPath>C:\Users\Tyler\Documents\CodeStuff\CritterSim\Critter Sim\Library\ScriptAssemblies\Unity.AdaptivePerformance.Simulator.VRR.Extension.dll</HintPath>
     </Reference>
     <Reference Include="Unity.VisualStudio.Editor">
         <HintPath>C:\Users\Tyler\Documents\CodeStuff\CritterSim\Critter Sim\Library\ScriptAssemblies\Unity.VisualStudio.Editor.dll</HintPath>
@@ -814,6 +829,9 @@
     </Reference>
     <Reference Include="Unity.VisualScripting.Core.Editor">
         <HintPath>C:\Users\Tyler\Documents\CodeStuff\CritterSim\Critter Sim\Library\ScriptAssemblies\Unity.VisualScripting.Core.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.AdaptivePerformance.Samsung.Android.Editor">
+        <HintPath>C:\Users\Tyler\Documents\CodeStuff\CritterSim\Critter Sim\Library\ScriptAssemblies\Unity.AdaptivePerformance.Samsung.Android.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.AdaptivePerformance.Profiler.Editor">
         <HintPath>C:\Users\Tyler\Documents\CodeStuff\CritterSim\Critter Sim\Library\ScriptAssemblies\Unity.AdaptivePerformance.Profiler.Editor.dll</HintPath>
@@ -847,9 +865,6 @@
     </Reference>
     <Reference Include="Unity.2D.Psdimporter.Editor">
         <HintPath>C:\Users\Tyler\Documents\CodeStuff\CritterSim\Critter Sim\Library\ScriptAssemblies\Unity.2D.Psdimporter.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Subsystem.Registration">
-        <HintPath>C:\Users\Tyler\Documents\CodeStuff\CritterSim\Critter Sim\Library\ScriptAssemblies\Unity.Subsystem.Registration.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Mobile.AndroidLogcat.Editor">
         <HintPath>C:\Users\Tyler\Documents\CodeStuff\CritterSim\Critter Sim\Library\ScriptAssemblies\Unity.Mobile.AndroidLogcat.Editor.dll</HintPath>

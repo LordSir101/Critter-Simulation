@@ -80,7 +80,7 @@ public class critterBuilder : MonoBehaviour
         // Adjust hitbox size based on sprite size
         //double size = speed + sense + breed;
         if(template.GetComponent<BoxCollider2D>()){
-            float y_hitbox = (float) Math.Floor((double)size/3);
+            float y_hitbox = (float) Math.Ceiling((double)size/3);
             template.GetComponent<BoxCollider2D>().size = new Vector3(3, y_hitbox, 1);
             float offset = 0.5f*(3 - y_hitbox); //3 - y_hitbox
             template.GetComponent<BoxCollider2D>().offset = new Vector2(0, offset);

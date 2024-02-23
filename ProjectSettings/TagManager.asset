@@ -10,6 +10,8 @@ TagManager:
   - PlayerSpecies
   - Part
   - Eyes
+  - Food
+  - LineRenderer
   layers:
   - Default
   - TransparentFX
