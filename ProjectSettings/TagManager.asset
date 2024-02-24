@@ -46,6 +46,12 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: floor
+    uniqueID: 356377147
+    locked: 0
+  - name: Stuff
+    uniqueID: 1102798595
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0

@@ -17,10 +17,10 @@ public class critterBuilder : MonoBehaviour
 
     public void CreateCritter(int speed, int sense, int breed, GameObject template)
     {
-
         // get all child components of the critter template that have the partPreview tag
         List<GameObject> partSections = new();
-        Transform[] transform = template.GetComponentsInChildren<Transform>();
+        // The sprites for the critter are in the child object
+        Transform[] transform = template.transform.GetChild(0).gameObject.GetComponentsInChildren<Transform>();
 
         foreach(Transform part in transform){
              if (part.tag == "Part")
@@ -77,22 +77,16 @@ public class critterBuilder : MonoBehaviour
             }
         }
 
-        // // remove unnessecary components
-        // for(int i = partSections.Count-1; i > partSections.Count -size; i--)
-        // {
-        //     Destroy(partSections[i]);
-        // }
-
         // Adjust hitbox size based on sprite size
         //double size = speed + sense + breed;
         if(template.GetComponent<BoxCollider2D>()){
             float y_hitbox = (float) Math.Ceiling((double)size/3);
             template.GetComponent<BoxCollider2D>().size = new Vector3(3, y_hitbox, 1);
             float offset = 0.5f*(3 - y_hitbox); //3 - y_hitbox
-            template.GetComponent<BoxCollider2D>().offset = new Vector2(0, offset);
+            //template.GetComponent<BoxCollider2D>().offset = new Vector2(0, offset);
 
-            //Translate the child object so that the pivot point of the cirtter is in the middle of its body
-            template.transform.localPosition = new Vector3 (0,-offset,0);
+            //Translate the child object so that the pivot point of the critter is in the middle of its body
+            template.transform.GetChild(0).localPosition = new Vector3 (0,-offset,0);
 
             Debug.Log(template.GetComponent<BoxCollider2D>().offset);
             Debug.Log(template.GetComponent<BoxCollider2D>().size);

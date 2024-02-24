@@ -4,13 +4,13 @@ using System;
 
 public class Critter : MonoBehaviour
 {
-    private GameObject movementAnchor; // The game object used to dictate the center of the critter
+    //private GameObject movementAnchor; // The game object used to dictate the center of the critter
     public int speed;
     public int sense;
     public int breed;
 
-    private int speedScale = 3;
-    private int senseScale = 5;
+    private float speedScale = 0.5f;
+    private int senseScale = 3;
 
     public int energy;
 
@@ -25,11 +25,14 @@ public class Critter : MonoBehaviour
     public Sprite surprisedEyes;
     public Sprite normalEyes;
 
+    private LineRenderer lineRenderer;
+
     
     // Start is called before the first frame update
     void Start()
     {
-        movementAnchor = gameObject.transform.parent.gameObject; // use this so the movment is relative to the body of the critter
+        lineRenderer = gameObject.GetComponent<LineRenderer>();
+        //movementAnchor = gameObject.transform.parent.gameObject; // use this so the movment is relative to the body of the critter
         ScanForFood();
     }
 
@@ -37,7 +40,6 @@ public class Critter : MonoBehaviour
     void Update()
     {
         if(Time.time - timeOfCollsion >= 1 && inCollisionState){
-            //gameObject.GetComponent<Rigidbody2D>().velocity = new Vector3(move_speedX,move_speedY,0);
             inCollisionState = false;
             AnimateCollisionState();
         }
@@ -58,7 +60,7 @@ public class Critter : MonoBehaviour
     private void ScanForFood(){
         timeOfLastScan = Time.time;
         List<Collider2D> results = new List<Collider2D>();
-        Physics2D.OverlapCircle(new Vector2 (movementAnchor.transform.position.x, movementAnchor.transform.position.y), sense*(senseScale+1), new ContactFilter2D().NoFilter(), results);
+        Physics2D.OverlapCircle(new Vector2 (transform.position.x, transform.position.y), (sense+1)*senseScale, new ContactFilter2D().NoFilter(), results);
 
         double smallestDist = Int32.MaxValue;
         int foodFound = 0;
@@ -82,7 +84,8 @@ public class Critter : MonoBehaviour
         }
 
         if(foodFound == 0){
-            targetFood = new Vector3(UnityEngine.Random.Range(-10,10), UnityEngine.Random.Range(-10,10));
+            int[] directions = {-1,1};
+            targetFood = new Vector3(UnityEngine.Random.Range(8,20) * directions[UnityEngine.Random.Range(0,2)], UnityEngine.Random.Range(8,20) * directions[UnityEngine.Random.Range(0,2)]);
         }
 
         Debug.Log("Food found: " + foodFound);
@@ -90,14 +93,16 @@ public class Critter : MonoBehaviour
 
     private void Move()
     {
-        float angle = Mathf.Atan2(targetFood.y - movementAnchor.transform.position.y, targetFood.x - movementAnchor.transform.position.x ) * Mathf.Rad2Deg;
+        float angle = Mathf.Atan2(targetFood.y - transform.position.y, targetFood.x - transform.position.x ) * Mathf.Rad2Deg;
         // Euler will get a rotation of the sprite's about the z axis towards the given angle
         // The rotation points the x axis to the target.  we add 270 degrees to the angle so the y axis points to the target instead
         Quaternion targetRotation = Quaternion.Euler(new Vector3(0, 0, angle + 270));
-        movementAnchor.transform.rotation = Quaternion.RotateTowards(movementAnchor.transform.rotation, targetRotation, speed * (speedScale+1)* 50* Time.deltaTime);
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, (speed+1) * speedScale* 50* Time.deltaTime);
 
         //TODO: implement drag to deaccelerate as you get close to food
-        movementAnchor.transform.position = Vector3.MoveTowards(movementAnchor.transform.position, targetFood, speed*(speedScale +1)* Time.deltaTime);
+        //movementAnchor.transform.position = Vector3.MoveTowards(movementAnchor.transform.position, targetFood, speed*(speedScale +1)* Time.deltaTime);
+        Vector3 vel = targetFood - transform.position;
+        gameObject.GetComponent<Rigidbody2D>().velocity = vel * (speed+1) * speedScale;
     }
 
     private void OnCollisionEnter2D(Collision2D collision) {
@@ -128,20 +133,17 @@ public class Critter : MonoBehaviour
         // draw a circle based on radius and subdivision
         // the line renderer is attatched to the critter and the circle will automatically move with it
         int subdivisions = 15;
-        float radius = sense*(senseScale + 1);
+        //float radius = sense*(senseScale + 1);
 
         float angleStop = 2f * Mathf.PI / subdivisions;
-
-        LineRenderer lineRenderer = movementAnchor.GetComponent<LineRenderer>();
-        
         lineRenderer.positionCount = subdivisions;
 
         for(int i = 0; i < subdivisions; i++)
         {
-            float x = radius * Mathf.Cos(angleStop*i);
-            float y = radius * Mathf.Sin(angleStop * i);
+            float x = (sense+1)*senseScale * Mathf.Cos(angleStop*i);
+            float y = (sense+1)*senseScale * Mathf.Sin(angleStop * i);
 
-            Vector3 pointInCircle = new Vector3(x,y,0);
+            Vector3 pointInCircle = new Vector3(gameObject.transform.position.x + x,gameObject.transform.position.y + y,0);
 
             lineRenderer.SetPosition(i,pointInCircle);
         }

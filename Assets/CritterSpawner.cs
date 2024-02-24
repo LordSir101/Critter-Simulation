@@ -16,9 +16,9 @@ public class CritterSpawner : MonoBehaviour
 
             // The parent object of template is an empty object used to control the pivot point of the sprite
             // We need to get the child object for the actual critter template
-            GameObject critterParent = Instantiate(critterTemplate, new Vector3(transform.position.x + xoffset, transform.position.y + yoffset, 0), transform.rotation);
-            GameObject critter = critterParent.transform.GetChild(0).gameObject;
-            
+            GameObject critter = Instantiate(critterTemplate, new Vector3(transform.position.x + xoffset, transform.position.y + yoffset, 0), transform.rotation);
+            //GameObject critter = critterParent.transform.GetChild(0).gameObject;
+
             critter.GetComponent<Critter>().speed = MenuInput.speed;
             critter.GetComponent<Critter>().sense = MenuInput.sense;
             critter.GetComponent<Critter>().breed = MenuInput.breed;
