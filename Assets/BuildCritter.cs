@@ -77,6 +77,12 @@ public class critterBuilder : MonoBehaviour
             }
         }
 
+        // // remove unnessecary components
+        // for(int i = partSections.Count-1; i > partSections.Count -size; i--)
+        // {
+        //     Destroy(partSections[i]);
+        // }
+
         // Adjust hitbox size based on sprite size
         //double size = speed + sense + breed;
         if(template.GetComponent<BoxCollider2D>()){
@@ -84,6 +90,9 @@ public class critterBuilder : MonoBehaviour
             template.GetComponent<BoxCollider2D>().size = new Vector3(3, y_hitbox, 1);
             float offset = 0.5f*(3 - y_hitbox); //3 - y_hitbox
             template.GetComponent<BoxCollider2D>().offset = new Vector2(0, offset);
+
+            //Translate the child object so that the pivot point of the cirtter is in the middle of its body
+            template.transform.localPosition = new Vector3 (0,-offset,0);
 
             Debug.Log(template.GetComponent<BoxCollider2D>().offset);
             Debug.Log(template.GetComponent<BoxCollider2D>().size);

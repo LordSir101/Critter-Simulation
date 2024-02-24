@@ -352,7 +352,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   critterBuilder: {fileID: 1566537064}
-  critterTemplate: {fileID: 2705925077232993111, guid: 33a5d22c49bad2c4d99d9cf5386cd7c7, type: 3}
+  critterTemplate: {fileID: 5518243852280684052, guid: 9813249f57f339146ae4b794a6b77ffa, type: 3}
 --- !u!1 &1842980347
 GameObject:
   m_ObjectHideFlags: 0

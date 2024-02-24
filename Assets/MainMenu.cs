@@ -74,6 +74,9 @@ public class MainMenu : MonoBehaviour
 
     private void BuildPreview()
     {
+        // Instantiate a new preview every time since buildcritter may destroy some components
+        Destroy(preview);
+        preview = Instantiate(critterTemplate, new Vector3(transform.position.x+5, transform.position.y + 1, 0), transform.rotation);
         critterBuilder.CreateCritter(MenuInput.speed, MenuInput.sense, MenuInput.breed, preview);
     }
 

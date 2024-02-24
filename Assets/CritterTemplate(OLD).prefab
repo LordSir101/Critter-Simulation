@@ -8,6 +8,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 704016724536107300, guid: 34e2c940dc61c7542b70b3b9525cb4c9, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 1347fecc9b444fa4bbb483d2ec574108, type: 3}
+    - target: {fileID: 704016724536107300, guid: 34e2c940dc61c7542b70b3b9525cb4c9, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1345336996212171886, guid: 34e2c940dc61c7542b70b3b9525cb4c9, type: 3}
       propertyPath: m_TagString
       value: Part
@@ -15,6 +23,14 @@ PrefabInstance:
     - target: {fileID: 1791953510101834363, guid: 34e2c940dc61c7542b70b3b9525cb4c9, type: 3}
       propertyPath: m_TagString
       value: Part
+      objectReference: {fileID: 0}
+    - target: {fileID: 1869740203686028447, guid: 34e2c940dc61c7542b70b3b9525cb4c9, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 1347fecc9b444fa4bbb483d2ec574108, type: 3}
+    - target: {fileID: 1869740203686028447, guid: 34e2c940dc61c7542b70b3b9525cb4c9, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2297150074994001950, guid: 34e2c940dc61c7542b70b3b9525cb4c9, type: 3}
       propertyPath: m_TagString
@@ -54,11 +70,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7318731032856850594, guid: 34e2c940dc61c7542b70b3b9525cb4c9, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2100
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7318731032856850594, guid: 34e2c940dc61c7542b70b3b9525cb4c9, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 900
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7318731032856850594, guid: 34e2c940dc61c7542b70b3b9525cb4c9, type: 3}
       propertyPath: m_LocalPosition.z
@@ -143,8 +159,6 @@ MonoBehaviour:
   sense: 0
   breed: 0
   energy: 0
-  move_speedX: 5
-  move_speedY: 5
   timeOfCollsion: 0
   inCollisionState: 0
   scanInterval: 2
@@ -275,7 +289,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
