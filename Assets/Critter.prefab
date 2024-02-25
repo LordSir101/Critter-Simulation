@@ -102,9 +102,9 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0.7176471, g: 0.15057234, b: 0.10980394, a: 1}
-      key1: {r: 0.7176471, g: 0.15057234, b: 0.10980394, a: 1}
-      key2: {r: 0.7169812, g: 0.11160557, b: 0.11160557, a: 0}
+      key0: {r: 0.7924528, g: 0.13155298, b: 0.08597367, a: 1}
+      key1: {r: 0.7219884, g: 0.16581896, b: 0.12583455, a: 1}
+      key2: {r: 0.7219884, g: 0.16581896, b: 0.12583455, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
       key5: {r: 0, g: 0, b: 0, a: 0}
@@ -118,8 +118,8 @@ LineRenderer:
       ctime5: 0
       ctime6: 0
       ctime7: 0
-      atime0: 0
-      atime1: 65535
+      atime0: 13878
+      atime1: 61873
       atime2: 0
       atime3: 0
       atime4: 0
@@ -251,7 +251,7 @@ MonoBehaviour:
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 0.5
   m_Color: {r: 0.8113208, g: 0.049750824, b: 0.049750824, a: 1}
-  m_Intensity: 2
+  m_Intensity: 3
   m_LightVolumeIntensity: 1
   m_LightVolumeIntensityEnabled: 0
   m_ApplyToSortingLayers: 3be23d15035fbb4100000000
