@@ -199,7 +199,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 1
   m_Mass: 9
-  m_LinearDrag: 100
+  m_LinearDrag: 20
   m_AngularDrag: 20
   m_GravityScale: 0
   m_Material: {fileID: 0}
@@ -228,6 +228,7 @@ MonoBehaviour:
   speed: 0
   sense: 0
   breed: 0
+  movementTarget: {fileID: 7948002133433096677, guid: b8e5931ef150fa5479e18764bf7de14e, type: 3}
   energy: 0
   timeOfCollsion: 0
   inCollisionState: 0

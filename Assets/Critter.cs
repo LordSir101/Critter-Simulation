@@ -10,18 +10,24 @@ public class Critter : MonoBehaviour
     public int sense;
     public int breed;
 
-    private float speedScale = 0.5f;
+    public GameObject movementTarget;
+
+    private Vector3 vel;
+
+    private float speedScale = 2f;
     private int senseScale = 3;
 
     public int energy;
 
-    private Vector3 targetFood;
+    private Vector3 targetFoodPos;
+    private GameObject targetFood;
+
 
     public float timeOfCollsion;
     public bool inCollisionState = false;
 
     public float scanInterval = 2;
-    private float timeOfLastScan;
+    //private float timeOfLastScan;
 
     public Sprite surprisedEyes;
     public Sprite normalEyes;
@@ -43,13 +49,21 @@ public class Critter : MonoBehaviour
             inCollisionState = false;
             AnimateCollisionState();
         }
-        if(Time.time - timeOfLastScan >= scanInterval)
+        // if(Time.time - timeOfLastScan >= scanInterval)
+        // {
+        //     ScanForFood();
+        // }
+        // only scan when the current target has been destroyed
+        if(!targetFood)
         {
             ScanForFood();
         }
-       
-        Move();
         DrawVision();
+    }
+
+    void FixedUpdate()
+    {
+        Move();
     }
 
     public void EatFood(int energyValue)
@@ -58,22 +72,22 @@ public class Critter : MonoBehaviour
     }
 
     private void ScanForFood(){
-        timeOfLastScan = Time.time;
+        //timeOfLastScan = Time.time;
         List<Collider2D> results = new List<Collider2D>();
         Physics2D.OverlapCircle(new Vector2 (transform.position.x, transform.position.y), (sense+1)*senseScale, new ContactFilter2D().NoFilter(), results);
 
         double mostEfficient = Int32.MinValue;
         int foodFound = 0;
 
-        //TODO, find food that is the closest and has largest size
         foreach(Collider2D collider in results)
         {
-            //collider.transform.gameObject.GetComponent<Light2D>().color = Color.red;
+            // only check the colliders in the circle that are food
             if(collider.transform.tag == "Food"){
                 foodFound++;
                 float xCoord = collider.transform.position.x;
                 float yCoord = collider.transform.position.y;
 
+                // The critter will target the food that has the most energy per distance traveled
                 int energyValue = collider.transform.gameObject.GetComponent<FoodEatenDetection>().energyValue;
                 double distSquared = Math.Pow((double)xCoord - transform.position.x ,2) + Math.Pow((double)yCoord - transform.position.y, 2);
 
@@ -81,29 +95,35 @@ public class Critter : MonoBehaviour
                 if(effciency > mostEfficient)
                 {
                     mostEfficient = effciency;
-                    targetFood = new Vector3(xCoord,yCoord,0);
+                    targetFoodPos = new Vector3(xCoord,yCoord,0);
+                    targetFood = collider.transform.gameObject;
                 }
                 
             }
         }
 
+        // if there is no food, create an invisible target to move towards at a random location near the critter;
         if(foodFound == 0){
             int[] directions = {-1,1};
-            targetFood = new Vector3(UnityEngine.Random.Range(8,20) * directions[UnityEngine.Random.Range(0,2)], UnityEngine.Random.Range(8,20) * directions[UnityEngine.Random.Range(0,2)]);
+            float xCoord = UnityEngine.Random.Range(8,20) * directions[UnityEngine.Random.Range(0,2)];
+            float yCoord = UnityEngine.Random.Range(8,20) * directions[UnityEngine.Random.Range(0,2)];
+            targetFood = Instantiate(movementTarget, new Vector3(xCoord, yCoord,0), transform.rotation);
+            targetFoodPos = new Vector3(xCoord, yCoord, 0);
         }
+        
     }
 
     private void Move()
     {
-        float angle = Mathf.Atan2(targetFood.y - transform.position.y, targetFood.x - transform.position.x ) * Mathf.Rad2Deg;
+        float angle = Mathf.Atan2(targetFoodPos.y - transform.position.y, targetFoodPos.x - transform.position.x ) * Mathf.Rad2Deg;
         // Euler will get a rotation of the sprite's about the z axis towards the given angle
         // The rotation points the x axis to the target.  we add 270 degrees to the angle so the y axis points to the target instead
         Quaternion targetRotation = Quaternion.Euler(new Vector3(0, 0, angle + 270));
         transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, (speed+1) * speedScale * 60 * Time.deltaTime);
 
-        //TODO: implement drag to deaccelerate as you get close to food
-        //movementAnchor.transform.position = Vector3.MoveTowards(movementAnchor.transform.position, targetFood, speed*(speedScale +1)* Time.deltaTime);
-        Vector3 vel = targetFood - transform.position;
+        // normalize then scale the vector so that the critter always moves with a constant speed towards the target
+        vel = targetFoodPos - transform.position;
+        vel.Normalize();
         gameObject.GetComponent<Rigidbody2D>().velocity = vel * (speed+1) * speedScale;
     }
 

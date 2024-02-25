@@ -13,7 +13,7 @@ public class CritterSpawner : MonoBehaviour
     private Vector3 mapSize;
     void Start()
     {
-        mapSize = mapSize = GameObject.FindAnyObjectByType<EnvironmentManager>().GetComponent<EnvironmentManager>().mapSize;
+        mapSize = GameObject.FindAnyObjectByType<EnvironmentManager>().GetComponent<EnvironmentManager>().mapSize;
         int buffer = 5;
         int width = (int)mapSize[0] / 2;
         int height = (int)mapSize[1] / 2;
