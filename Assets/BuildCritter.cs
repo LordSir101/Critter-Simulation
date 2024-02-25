@@ -17,6 +17,7 @@ public class critterBuilder : MonoBehaviour
 
     public void CreateCritter(int speed, int sense, int breed, GameObject template)
     {
+
         // get all child components of the critter template that have the partPreview tag
         List<GameObject> partSections = new();
         // The sprites for the critter are in the child object
@@ -87,9 +88,6 @@ public class critterBuilder : MonoBehaviour
 
             //Translate the child object so that the pivot point of the critter is in the middle of its body
             template.transform.GetChild(0).localPosition = new Vector3 (0,-offset,0);
-
-            Debug.Log(template.GetComponent<BoxCollider2D>().offset);
-            Debug.Log(template.GetComponent<BoxCollider2D>().size);
 
         }
         

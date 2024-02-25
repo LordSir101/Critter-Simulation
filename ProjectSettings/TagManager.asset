@@ -12,6 +12,7 @@ TagManager:
   - Eyes
   - Food
   - LineRenderer
+  - PlayableArea
   layers:
   - Default
   - TransparentFX

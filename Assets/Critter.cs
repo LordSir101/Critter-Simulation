@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System;
+using UnityEngine.Rendering.Universal;
 
 public class Critter : MonoBehaviour
 {
@@ -52,9 +53,9 @@ public class Critter : MonoBehaviour
         DrawVision();
     }
 
-    public void EatFood()
+    public void EatFood(int energyValue)
     {
-        energy += 10;
+        energy += energyValue;
     }
 
     private void ScanForFood(){
@@ -62,24 +63,29 @@ public class Critter : MonoBehaviour
         List<Collider2D> results = new List<Collider2D>();
         Physics2D.OverlapCircle(new Vector2 (transform.position.x, transform.position.y), (sense+1)*senseScale, new ContactFilter2D().NoFilter(), results);
 
-        double smallestDist = Int32.MaxValue;
+        double mostEfficient = Int32.MinValue;
         int foodFound = 0;
 
         //TODO, find food that is the closest and has largest size
         foreach(Collider2D collider in results)
         {
+            //collider.transform.gameObject.GetComponent<Light2D>().color = Color.red;
             //Debug.Log(collider);
             if(collider.transform.tag == "Food"){
                 foodFound++;
                 float xCoord = collider.transform.position.x;
                 float yCoord = collider.transform.position.y;
 
-                double distSquared = Math.Pow((double)xCoord,2) + Math.Pow((double)yCoord, 2);
-                if(distSquared < smallestDist)
+                int energyValue = collider.transform.gameObject.GetComponent<FoodEatenDetection>().energyValue;
+                double distSquared = Math.Pow((double)xCoord - transform.position.x ,2) + Math.Pow((double)yCoord - transform.position.y, 2);
+
+                double effciency = energyValue / distSquared;
+                if(effciency > mostEfficient)
                 {
-                    smallestDist = distSquared;
+                    mostEfficient = effciency;
                     targetFood = new Vector3(xCoord,yCoord,0);
                 }
+                
             }
         }
 
