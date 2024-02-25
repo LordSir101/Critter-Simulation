@@ -33,7 +33,6 @@ public class Critter : MonoBehaviour
     void Start()
     {
         lineRenderer = gameObject.GetComponent<LineRenderer>();
-        //movementAnchor = gameObject.transform.parent.gameObject; // use this so the movment is relative to the body of the critter
         ScanForFood();
     }
 
@@ -70,7 +69,6 @@ public class Critter : MonoBehaviour
         foreach(Collider2D collider in results)
         {
             //collider.transform.gameObject.GetComponent<Light2D>().color = Color.red;
-            //Debug.Log(collider);
             if(collider.transform.tag == "Food"){
                 foodFound++;
                 float xCoord = collider.transform.position.x;
@@ -93,8 +91,6 @@ public class Critter : MonoBehaviour
             int[] directions = {-1,1};
             targetFood = new Vector3(UnityEngine.Random.Range(8,20) * directions[UnityEngine.Random.Range(0,2)], UnityEngine.Random.Range(8,20) * directions[UnityEngine.Random.Range(0,2)]);
         }
-
-        Debug.Log("Food found: " + foodFound);
     }
 
     private void Move()
@@ -103,7 +99,7 @@ public class Critter : MonoBehaviour
         // Euler will get a rotation of the sprite's about the z axis towards the given angle
         // The rotation points the x axis to the target.  we add 270 degrees to the angle so the y axis points to the target instead
         Quaternion targetRotation = Quaternion.Euler(new Vector3(0, 0, angle + 270));
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, (speed+1) * speedScale* 50* Time.deltaTime);
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, (speed+1) * speedScale * 60 * Time.deltaTime);
 
         //TODO: implement drag to deaccelerate as you get close to food
         //movementAnchor.transform.position = Vector3.MoveTowards(movementAnchor.transform.position, targetFood, speed*(speedScale +1)* Time.deltaTime);
