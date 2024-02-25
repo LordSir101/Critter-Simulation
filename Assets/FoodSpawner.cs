@@ -29,7 +29,6 @@ public class FoodSpawner : MonoBehaviour
     }
 
     private void SpawnFood(){
-        Debug.Log(mapSize);
         lastSpawnTime = Time.time;
         int buffer = 3;
         int width = (int)mapSize[0] / 2;

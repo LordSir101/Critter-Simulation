@@ -10,12 +10,18 @@ public class Critter : MonoBehaviour
     public int sense;
     public int breed;
 
-    private float speedScale = 0.5f;
+    public GameObject MovementTarget;
+
+    private Vector3 vel;
+
+    private float speedScale = 2f;
     private int senseScale = 3;
 
     public int energy;
 
-    private Vector3 targetFood;
+    private Vector3 targetFoodPos;
+    private GameObject targetFood;
+
 
     public float timeOfCollsion;
     public bool inCollisionState = false;
@@ -43,7 +49,11 @@ public class Critter : MonoBehaviour
             inCollisionState = false;
             AnimateCollisionState();
         }
-        if(Time.time - timeOfLastScan >= scanInterval)
+        // if(Time.time - timeOfLastScan >= scanInterval)
+        // {
+        //     ScanForFood();
+        // }
+        if(!targetFood)
         {
             ScanForFood();
         }
@@ -52,12 +62,17 @@ public class Critter : MonoBehaviour
         DrawVision();
     }
 
+    // void FixedUpdate()
+    // {
+    //     Move();
+    // }
+
     public void EatFood(int energyValue)
     {
         energy += energyValue;
     }
 
-    private void ScanForFood(){
+    public void ScanForFood(){
         timeOfLastScan = Time.time;
         List<Collider2D> results = new List<Collider2D>();
         Physics2D.OverlapCircle(new Vector2 (transform.position.x, transform.position.y), (sense+1)*senseScale, new ContactFilter2D().NoFilter(), results);
@@ -81,7 +96,8 @@ public class Critter : MonoBehaviour
                 if(effciency > mostEfficient)
                 {
                     mostEfficient = effciency;
-                    targetFood = new Vector3(xCoord,yCoord,0);
+                    targetFoodPos = new Vector3(xCoord,yCoord,0);
+                    targetFood = collider.transform.gameObject;
                 }
                 
             }
@@ -89,13 +105,23 @@ public class Critter : MonoBehaviour
 
         if(foodFound == 0){
             int[] directions = {-1,1};
-            targetFood = new Vector3(UnityEngine.Random.Range(8,20) * directions[UnityEngine.Random.Range(0,2)], UnityEngine.Random.Range(8,20) * directions[UnityEngine.Random.Range(0,2)]);
+            // if there is no food, create an invisible target to move towards at a random location near the critter;
+            float xCoord = UnityEngine.Random.Range(8,20) * directions[UnityEngine.Random.Range(0,2)];
+            float yCoord = UnityEngine.Random.Range(8,20) * directions[UnityEngine.Random.Range(0,2)];
+            targetFood = Instantiate(MovementTarget, new Vector3(xCoord, yCoord,0), transform.rotation);
+            targetFoodPos = targetFood.transform.position;
         }
+        vel = targetFoodPos - transform.position;
+        //int dirX = (int)vel[0] / (int)vel[0];
+        // int dirY = (int)vel[1] / (int)vel[1];
+        vel.Normalize();
+        vel = vel * (speed+1) * speedScale; //new Vector3(vel[0] + ((speed+1) * speedScale * dirX), vel[1] + ((speed+1) * speedScale * dirY));
+        
     }
 
     private void Move()
     {
-        float angle = Mathf.Atan2(targetFood.y - transform.position.y, targetFood.x - transform.position.x ) * Mathf.Rad2Deg;
+        float angle = Mathf.Atan2(targetFoodPos.y - transform.position.y, targetFoodPos.x - transform.position.x ) * Mathf.Rad2Deg;
         // Euler will get a rotation of the sprite's about the z axis towards the given angle
         // The rotation points the x axis to the target.  we add 270 degrees to the angle so the y axis points to the target instead
         Quaternion targetRotation = Quaternion.Euler(new Vector3(0, 0, angle + 270));
@@ -103,8 +129,10 @@ public class Critter : MonoBehaviour
 
         //TODO: implement drag to deaccelerate as you get close to food
         //movementAnchor.transform.position = Vector3.MoveTowards(movementAnchor.transform.position, targetFood, speed*(speedScale +1)* Time.deltaTime);
-        Vector3 vel = targetFood - transform.position;
-        gameObject.GetComponent<Rigidbody2D>().velocity = vel * (speed+1) * speedScale;
+        // Vector3 vel = targetFood - transform.position;
+        // gameObject.GetComponent<Rigidbody2D>().velocity = vel * (speed+1) * speedScale;
+        
+        gameObject.GetComponent<Rigidbody2D>().velocity = vel;
     }
 
     private void OnCollisionEnter2D(Collision2D collision) {
