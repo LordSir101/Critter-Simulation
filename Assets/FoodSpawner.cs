@@ -9,18 +9,17 @@ public class FoodSpawner : MonoBehaviour
     private float lastSpawnTime;
     private float spawnInterval = 10;
 
-    private int numFoodToSpawn = 20;
+    private int numFoodToSpawn = 80;
     public GameObject food;
 
     private Vector3 mapSize;
-    // Start is called before the first frame update
+ 
     void Start()
     {
         mapSize = GameObject.FindAnyObjectByType<EnvironmentManager>().GetComponent<EnvironmentManager>().mapSize;
         SpawnFood();
     }
 
-    // Update is called once per frame
     void Update()
     {
         if(Time.time - lastSpawnTime >= spawnInterval){
