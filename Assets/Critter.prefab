@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: -7734569854380664228}
   m_Layer: 0
   m_Name: Critter
-  m_TagString: Untagged
+  m_TagString: Critter
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -45,7 +45,7 @@ LineRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5518243852280684052}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -228,6 +228,8 @@ MonoBehaviour:
   speed: 0
   sense: 0
   breed: 0
+  speciesNum: 0
+  color: {r: 0, g: 0, b: 0, a: 1}
   movementTarget: {fileID: 7948002133433096677, guid: b8e5931ef150fa5479e18764bf7de14e, type: 3}
   timeOfCollsion: 0
   inCollisionState: 0
