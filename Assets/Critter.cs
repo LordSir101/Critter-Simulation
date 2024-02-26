@@ -114,7 +114,7 @@ public class Critter : MonoBehaviour
             float yCoord = UnityEngine.Random.Range(8,20) * directions[UnityEngine.Random.Range(0,2)];
             Vector3 targetPos = transform.position + new Vector3(xCoord, yCoord,0);
             targetFood = Instantiate(movementTarget, targetPos, transform.rotation);
-            targetFoodPos = new Vector3(xCoord, yCoord, 0);
+            targetFoodPos = targetPos;
         }
         
     }
@@ -124,8 +124,8 @@ public class Critter : MonoBehaviour
         float angle = Mathf.Atan2(targetFoodPos.y - transform.position.y, targetFoodPos.x - transform.position.x ) * Mathf.Rad2Deg;
         // Euler will get a rotation of the sprite's about the z axis towards the given angle
         // The rotation points the x axis to the target.  we add 270 degrees to the angle so the y axis points to the target instead
-        Quaternion targetRotation = Quaternion.Euler(new Vector3(0, 0, angle + 270));
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, (speed+1) * speedScale * 60 * Time.deltaTime);
+        Quaternion targetRotation = Quaternion.Euler(new Vector3(0, 0, angle - 90));
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, (speed+1) * speedScale * 20 * Time.deltaTime);
 
         // normalize then scale the vector so that the critter always moves with a constant speed towards the target
         Vector3 directionToMove = targetFoodPos - transform.position;
