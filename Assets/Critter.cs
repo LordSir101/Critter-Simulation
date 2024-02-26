@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.UI;
 
 public class Critter : MonoBehaviour
 {
@@ -37,17 +38,11 @@ public class Critter : MonoBehaviour
 
     private LineRenderer lineRenderer;
 
+    private Button visionToggle;
+
     void Start()
     {
-        gameObject.GetComponent<Light2D>().color = color;
-        lineRenderer = gameObject.GetComponent<LineRenderer>();
-        Gradient gradient = new Gradient();
-        gradient.SetKeys(
-            new GradientColorKey[] { new GradientColorKey(color, 0.0f), new GradientColorKey(color, 1.0f) },
-            new GradientAlphaKey[] { new GradientAlphaKey(1.0f, 0.0f), new GradientAlphaKey(1.0f, 1.0f) }
-        );
-        lineRenderer.colorGradient = gradient;
-        critterManager = GameObject.FindGameObjectWithTag("CritterManager");
+        Setup();
         UseEnergy();
         ScanForFood();
     }
@@ -62,7 +57,11 @@ public class Critter : MonoBehaviour
         {
             ScanForFood();
         }
-        DrawVision();
+
+        if(lineRenderer.enabled){
+            DrawVision();
+        }
+        
 
         if(Time.time - timeOfLastEnergyConsumption >= energyUsageRate){
             UseEnergy();
@@ -206,6 +205,27 @@ public class Critter : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void ToggleLineRenderer()
+    {
+        lineRenderer.enabled = !lineRenderer.enabled;
+    }
+
+    private void Setup()
+    {
+        gameObject.GetComponent<Light2D>().color = color;
+        lineRenderer = gameObject.GetComponent<LineRenderer>();
+        Gradient gradient = new Gradient();
+        gradient.SetKeys(
+            new GradientColorKey[] { new GradientColorKey(color, 0.0f), new GradientColorKey(color, 1.0f) },
+            new GradientAlphaKey[] { new GradientAlphaKey(1.0f, 0.0f), new GradientAlphaKey(1.0f, 1.0f) }
+        );
+        lineRenderer.colorGradient = gradient;
+        critterManager = GameObject.FindGameObjectWithTag("CritterManager");
+
+        visionToggle = GameObject.FindGameObjectWithTag("VisionToggle").GetComponent<Button>();
+        visionToggle.onClick.AddListener(ToggleLineRenderer);
     }
 
 }
