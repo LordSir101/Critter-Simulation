@@ -226,6 +226,10 @@ public class Critter : MonoBehaviour
 
         visionToggle = GameObject.FindGameObjectWithTag("VisionToggle").GetComponent<Button>();
         visionToggle.onClick.AddListener(ToggleLineRenderer);
+
+        // toggle the initial state of line renderer to avoid desync when critters spawn
+        EnvironmentManager manager = GameObject.FindGameObjectWithTag("EnvironmentManager").GetComponent<EnvironmentManager>();
+        lineRenderer.enabled = manager.showLines;
     }
 
 }
