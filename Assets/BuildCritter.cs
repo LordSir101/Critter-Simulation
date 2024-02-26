@@ -10,19 +10,20 @@ public class critterBuilder : MonoBehaviour
     public Sprite senseSprite;
     public Sprite breedSprite;
 
-    private void SwapPreviewSlots(int firstIdx, int secondIdx, List<GameObject> partSections)
+    private void SwapPartSlots(int firstIdx, int secondIdx, List<GameObject> partSections)
     {
         (partSections[secondIdx], partSections[firstIdx]) = (partSections[firstIdx], partSections[secondIdx]);
     }
 
+    // Set the sprites and hitboxes for the critter based on its stats
     public void CreateCritter(int speed, int sense, int breed, GameObject template)
     {
 
-        // get all child components of the critter template that have the partPreview tag
-        List<GameObject> partSections = new();
-        // The sprites for the critter are in the child object
+        // The components that hold the part sprites of the critter are in the child object
         Transform[] transform = template.transform.GetChild(0).gameObject.GetComponentsInChildren<Transform>();
 
+        // get all child components of the critter template that have the part tag
+        List<GameObject> partSections = new();
         foreach(Transform part in transform){
              if (part.tag == "Part")
             {
@@ -42,14 +43,24 @@ public class critterBuilder : MonoBehaviour
         // 4 5 6
         // 7 8 9
 
+        // A critter with size 4 should be this. The fourth part is in position 5
+        // 1 2 3
+        //   5
+
+        // and 5 should be this. The fifth part is in position 6
+        // 1 2 3
+        // 4   6
+
+        // So we can essentially move the part at index "size" one slot forward in the parts array
+
         int[] sizesToSwapFor = new int[]{4,5,7,8};
         
         if(sizesToSwapFor.Contains(size))
         {
-            SwapPreviewSlots(size-1, size, partSections);
+            SwapPartSlots(size-1, size, partSections);
         }
 
-        // reset all parts of the criter
+        // reset all parts of the criter. 
         for (int i = 0; i < partSections.Count; i++)
         {
             SpriteRenderer partImage = partSections[i].GetComponent<SpriteRenderer>();
@@ -78,15 +89,13 @@ public class critterBuilder : MonoBehaviour
             }
         }
 
-        // Adjust hitbox size based on sprite size
-        //double size = speed + sense + breed;
         if(template.GetComponent<BoxCollider2D>()){
+            // Adjust hitbox size based on sprite size
             float y_hitbox = (float) Math.Ceiling((double)size/3);
             template.GetComponent<BoxCollider2D>().size = new Vector3(3, y_hitbox, 1);
-            float offset = 0.5f*(3 - y_hitbox); //3 - y_hitbox
-            //template.GetComponent<BoxCollider2D>().offset = new Vector2(0, offset);
 
-            //Translate the child object so that the pivot point of the critter is in the middle of its body
+            // By default, the hitbox is centered on a 3x3 critter so we translate the sprites downward if the hitbox is smaller so that the center of the hitbox is in the center of the sprite
+            float offset = 0.5f*(3 - y_hitbox);
             template.transform.GetChild(0).localPosition = new Vector3 (0,-offset,0);
 
         }

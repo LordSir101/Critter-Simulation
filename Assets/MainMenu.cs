@@ -71,7 +71,6 @@ public class MainMenu : MonoBehaviour
         BuildPreview();
     }
 
-
     private void BuildPreview()
     {
         // Instantiate a new preview every time since buildcritter may destroy some components
