@@ -12,21 +12,26 @@ public class CritterManager : MonoBehaviour
     private int numInitialSpecies = 4;
     private int numInitialCrittersToSpawn = 8;
 
+    private int MAX_NUM_SPECIES = 10;
+
     // Tilemap
     private Vector3 mapSize;
     int buffer;
     int width;
     int height;
 
-    int crittersAlive = 0;
+    public Dictionary<int, int> speciesCount = new Dictionary<int, int>(){
+            {0, 0}, 
+            {1, 0}, 
+            {2, 0}, 
+            {3, 0} 
+        };
 
-    float lastCheck;
-
-    private Dictionary<int,Color> colors = new Dictionary<int, Color>(){
-            {1, new Color32(207, 13, 13, 255 )}, //red
-            {2, new Color32(26, 184, 217, 255 )}, //blue
-            {3, new Color32(46, 154, 34, 255 )}, //green
-            {4, new Color32(255, 230, 52, 255 )} //gold
+    public Dictionary<int,Color> colors = new Dictionary<int, Color>(){
+            {0, new Color32(207, 13, 13, 255 )}, //red
+            {1, new Color32(26, 184, 217, 255 )}, //blue
+            {2, new Color32(46, 154, 34, 255 )}, //green
+            {3, new Color32(255, 230, 52, 255 )} //gold
         };
     void Start()
     {
@@ -36,14 +41,15 @@ public class CritterManager : MonoBehaviour
         width = (int)mapSize[0] / 2;
         height = (int)mapSize[1] / 2;
 
+        // for(int i = 0; i < numInitialSpecies; i++){
+        //     speciesCount.Add(0);
+        // }
         for(int i = 0; i < numInitialCrittersToSpawn; i++){
-            CritterBirth(MenuInput.speed, MenuInput.sense, MenuInput.breed, 1, colors[1]);
+            CritterBirth(MenuInput.speed, MenuInput.sense, MenuInput.breed, 0, colors[0]);
         }
 
-        lastCheck = Time.time;
-
         // Generate random critters to populate the world
-        for(int i = 2; i <=numInitialSpecies; i++){
+        for(int i = 1; i < numInitialSpecies; i++){
             (int speed, int sense, int breed) = GenerateRandomCritter();
             for(int j = 0; j < numInitialCrittersToSpawn; j++)
             {
@@ -96,13 +102,18 @@ public class CritterManager : MonoBehaviour
         critter.GetComponent<Critter>().speciesNum = speciesNum;
         critter.GetComponent<Critter>().color = color;
         critterBuilder.CreateCritter(speed, sense, breed, critter);
-        crittersAlive++;
+
+        speciesCount[speciesNum]++;
     }
 
     public void CritterDeath(GameObject critter)
     {
-        crittersAlive--;
+        speciesCount[critter.GetComponent<Critter>().speciesNum]--;
         Destroy(critter);
+        if(speciesCount[critter.GetComponent<Critter>().speciesNum] == 0)
+        {
+            speciesCount.Remove(critter.GetComponent<Critter>().speciesNum);
+        }
     }
 
 }

@@ -16,6 +16,8 @@ TagManager:
   - CritterManager
   - Critter
   - VisionToggle
+  - EnvironmentManager
+  - SpeciesCountUI
   layers:
   - Default
   - TransparentFX
