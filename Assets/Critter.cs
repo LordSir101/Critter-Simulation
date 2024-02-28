@@ -214,6 +214,7 @@ public class Critter : MonoBehaviour
 
     private void Setup()
     {
+        // set up vision circle
         gameObject.GetComponent<Light2D>().color = color;
         lineRenderer = gameObject.GetComponent<LineRenderer>();
         Gradient gradient = new Gradient();
