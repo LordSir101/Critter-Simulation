@@ -25,7 +25,7 @@ public class MainMenu : MonoBehaviour
     public void Start()
     {
         // Instatiate a critter so the player can see a preview of what it will look like
-        preview = Instantiate(critterTemplate, new Vector3(transform.position.x+5, transform.position.y + 1, 0), transform.rotation);
+        preview = Instantiate(critterTemplate, new Vector3(transform.position.x+7, transform.position.y, 0), transform.rotation);
     }
 
     public void PlayGame()
@@ -75,7 +75,7 @@ public class MainMenu : MonoBehaviour
     {
         // Instantiate a new preview every time since buildcritter may destroy some components
         Destroy(preview);
-        preview = Instantiate(critterTemplate, new Vector3(transform.position.x+5, transform.position.y + 1, 0), transform.rotation);
+        preview = Instantiate(critterTemplate, new Vector3(transform.position.x + 7, transform.position.y , 0), transform.rotation);
         critterBuilder.CreateCritter(MenuInput.speed, MenuInput.sense, MenuInput.breed, preview);
     }
 
