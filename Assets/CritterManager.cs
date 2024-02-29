@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -10,6 +11,7 @@ public class CritterManager : MonoBehaviour
     public GameObject critterTemplate;
 
     private int numInitialSpecies = 4;
+    private int numSpeciesExisted = 4;
     private int numInitialCrittersToSpawn = 8;
 
     private int MAX_NUM_SPECIES = 10;
@@ -57,13 +59,6 @@ public class CritterManager : MonoBehaviour
             }
         }
         
-    }
-
-    void Update()
-    {
-        // if(Time.time - lastCheck >= 1){
-        //     Debug.Log(crittersAlive);
-        // }
     }
 
     (int,int,int) GenerateRandomCritter()
@@ -116,4 +111,90 @@ public class CritterManager : MonoBehaviour
         }
     }
 
+    public void EvolveFromCritter(GameObject critterToEvolveFrom)
+    {
+        if(++numSpeciesExisted > MAX_NUM_SPECIES)
+        {
+            return;
+        }
+
+        int newSpeciesNum = numSpeciesExisted;
+        // modify a stat of the critter by +/- 1
+        Critter critter = critterToEvolveFrom.GetComponent<Critter>();
+        int[]stats = {critter.speed, critter.sense, critter.breed};
+        int[] amountToChangeOptions = {-1, 1};
+
+        int statToChangeIndex = UnityEngine.Random.Range(0,3);
+        int amountToChange = amountToChangeOptions[UnityEngine.Random.Range(0,2)];
+
+        int size = critter.speed+critter.sense + critter.breed;
+        if(size == 3)
+        {
+            amountToChange = 1;
+        }
+        else if(size == 9)
+        {
+            amountToChange = -1;
+        }
+        stats[statToChangeIndex] = stats[statToChangeIndex] + amountToChange;
+        if(stats[statToChangeIndex] < 0)
+        {
+            stats[statToChangeIndex] = 0;
+        }
+
+        int newSpeed = stats[0];
+        int newSense = stats[1];
+        int newBreed = stats[2];    
+
+        Color32 newColor = modifyColor(critter.color);
+
+        speciesCount.Add(newSpeciesNum, 0);
+        colors.Add(newSpeciesNum, newColor);
+
+        Debug.Log(newColor);
+
+        for(int i = 0; i < numInitialCrittersToSpawn; i++)
+        {
+            CritterBirth(newSpeed, newSense, newBreed, newSpeciesNum, newColor);
+        }
+        
+    }
+
+    Color32 modifyColor(Color32 color)
+    {
+        Color32 oldColor = color;
+        int[] oldColorComponents = {oldColor.r, oldColor.g, oldColor.b};
+        int mainColor = oldColorComponents.Max(); // saturation
+        int mainColorIdx = Array.IndexOf(oldColorComponents, mainColor);
+        int rightColorIdx = (mainColorIdx + 1) % 3;
+        //int leftColorIdx = (mainColorIdx - 1) - 3 * (int)Math.Floor((double)(mainColorIdx - 1) / 3); // needed since % is remainder not modulo
+
+        int[] direction = {-1,1};
+
+        for(int i = 0; i < 3; i++)
+        {
+            int dir = direction[UnityEngine.Random.Range(0,2)];
+            int amountToModify = i == mainColorIdx ? 20 : 30;
+
+            // The color will slowly trend towards the right on color wheel.  Red->orange->yellow etc
+            if(i == rightColorIdx)
+            {
+                dir = 1;
+            }
+
+            // Prevent over/under flow
+            if(oldColorComponents[i] + amountToModify * dir < 0)
+            {
+                dir = 1;
+            }
+            else if(oldColorComponents[i] + amountToModify * dir > 255)
+            {
+                dir = -1;
+            }
+            oldColorComponents[i] = oldColorComponents[i] + amountToModify * dir;
+            
+        }
+
+        return new Color32((byte)oldColorComponents[0], (byte)oldColorComponents[1], (byte)oldColorComponents[2], 255);
+    }
 }

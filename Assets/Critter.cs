@@ -15,6 +15,7 @@ public class Critter : MonoBehaviour
 
     private float speedScale = 2f;
     private int senseScale = 5;
+    private int breedScale = 2;
 
     // Lifespan
     private int energy = 60;
@@ -172,12 +173,17 @@ public class Critter : MonoBehaviour
     private void AttemptBreed()
     {
         //each point in breed gives approx 1% extra chance to breed
-        int chance = UnityEngine.Random.Range(0,1000) - (10 * breed);
+        int chance = UnityEngine.Random.Range(0,1000) - (10 * (breed+1) * breedScale);
 
         if(energy > 60)
         {
             //TODO add a chance of evolving the species when a new one is born
             if (chance < 10) {
+                int evolveChance = UnityEngine.Random.Range(0,100);
+                if(evolveChance <= 1)
+                {
+                    critterManager.GetComponent<CritterManager>().EvolveFromCritter(gameObject);
+                }
                 critterManager.GetComponent<CritterManager>().CritterBirth(speed, sense, breed, speciesNum, color);
                 energy -= 60;
             }

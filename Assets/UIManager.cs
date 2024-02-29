@@ -46,6 +46,9 @@ public class UIManager : MonoBehaviour
                 color.a= 0.6f;
                 background.color = color;
 
+                background.enabled = true;
+                text.enabled = true;
+
                 elementNum++;
             }
 
