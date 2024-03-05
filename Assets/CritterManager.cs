@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -84,7 +85,7 @@ public class CritterManager : MonoBehaviour
         }
         return (speed, sense, breed);
     }
-    public void CritterBirth(int speed, int sense, int breed, int speciesNum, Color color, GameObject prefab)
+    public GameObject CritterBirth(int speed, int sense, int breed, int speciesNum, Color color, GameObject prefab, int energyToSpawnWith=80)
     {
 
         int xoffset = UnityEngine.Random.Range(-width + buffer, width - buffer);
@@ -97,14 +98,19 @@ public class CritterManager : MonoBehaviour
         critter.GetComponent<Critter>().breed = breed;
         critter.GetComponent<Critter>().speciesNum = speciesNum;
         critter.GetComponent<Critter>().color = color;
+        critter.GetComponent<Critter>().energy = energyToSpawnWith;
         critterBuilder.CreateCritter(speed, sense, breed, critter);
 
         speciesCount[speciesNum]++;
+
+        return critter;
     }
 
     public void CritterDeath(GameObject critter)
     {
         speciesCount[critter.GetComponent<Critter>().speciesNum]--;
+        critter.GetComponent<Critter>().dead = true;
+        critter.SetActive(false);
         Destroy(critter);
         if(speciesCount[critter.GetComponent<Critter>().speciesNum] == 0)
         {
@@ -112,12 +118,12 @@ public class CritterManager : MonoBehaviour
         }
     }
 
-    public void SpawnCarnivores(int speed, int sense, int breed, int numToSpawn)
+    public void SpawnCarnivores(int speed, int sense, int breed, int energyToSpawnWith, int numToSpawn)
     {
         speciesCount.Add(++numSpeciesExisted, 0);
         colors.Add(numSpeciesExisted, Color.white);
         for(int i = 0; i < numToSpawn; i++){
-            CritterBirth(speed, sense, breed, numSpeciesExisted, Color.white, carnivoreTemplate);
+            CritterBirth(speed, sense, breed, numSpeciesExisted, Color.white, carnivoreTemplate, energyToSpawnWith);
         }
     }
 
@@ -166,7 +172,7 @@ public class CritterManager : MonoBehaviour
 
         for(int i = 0; i < numInitialCrittersToSpawn; i++)
         {
-            CritterBirth(newSpeed, newSense, newBreed, newSpeciesNum, newColor, critterTemplate);
+            CritterBirth(newSpeed, newSense, newBreed, newSpeciesNum, newColor, critterTemplate, critter.energy /2);
         }
         
     }
