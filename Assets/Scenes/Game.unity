@@ -2102,6 +2102,7 @@ MonoBehaviour:
   mapSize: {x: 0, y: 0, z: 0}
   showLines: 0
   day: 1
+  critterManager: {fileID: 1813080668}
 --- !u!4 &1018486736
 Transform:
   m_ObjectHideFlags: 0
@@ -13411,6 +13412,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   critterBuilder: {fileID: 1566537064}
   critterTemplate: {fileID: 5518243852280684052, guid: 9813249f57f339146ae4b794a6b77ffa, type: 3}
+  carnivoreTemplate: {fileID: 7762119193437655339, guid: ef8089851263f57419a50828634e194c, type: 3}
 --- !u!1 &1835809777
 GameObject:
   m_ObjectHideFlags: 0

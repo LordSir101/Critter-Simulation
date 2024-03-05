@@ -21,11 +21,19 @@ public class critterBuilder : MonoBehaviour
 
         // The components that hold the part sprites of the critter are in the child object
         Transform[] transform = template.transform.GetChild(0).gameObject.GetComponentsInChildren<Transform>();
+        //Transform[] transform = {};
 
+        // foreach(Transform component in template.transform)
+        // {
+        //     if (component.tag == "BodyParts")
+        //     {
+        //         transform = template.transform.GetChild(0).gameObject.GetComponentsInChildren<Transform>();
+        //     }
+        // }
         // get all child components of the critter template that have the part tag
         List<GameObject> partSections = new();
         foreach(Transform part in transform){
-             if (part.tag == "Part")
+            if (part.tag == "Part")
             {
                 partSections.Add(part.gameObject);
             }

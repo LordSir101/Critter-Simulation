@@ -2,13 +2,15 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class CritterManager : MonoBehaviour
 {
     public critterBuilder critterBuilder;
-    public GameObject critterTemplate;
+    [SerializeField] private GameObject critterTemplate;
+    [SerializeField] private GameObject carnivoreTemplate;
 
     private int numInitialSpecies = 4;
     private int numSpeciesExisted = 4;
@@ -47,7 +49,7 @@ public class CritterManager : MonoBehaviour
         //     speciesCount.Add(0);
         // }
         for(int i = 0; i < numInitialCrittersToSpawn; i++){
-            CritterBirth(MenuInput.speed, MenuInput.sense, MenuInput.breed, 0, colors[0]);
+            CritterBirth(MenuInput.speed, MenuInput.sense, MenuInput.breed, 0, colors[0], critterTemplate);
         }
 
         // Generate random critters to populate the world
@@ -55,7 +57,7 @@ public class CritterManager : MonoBehaviour
             (int speed, int sense, int breed) = GenerateRandomCritter();
             for(int j = 0; j < numInitialCrittersToSpawn; j++)
             {
-                CritterBirth(speed, sense, breed, i, colors[i]);
+                CritterBirth(speed, sense, breed, i, colors[i], critterTemplate);
             }
         }
         
@@ -66,9 +68,9 @@ public class CritterManager : MonoBehaviour
         //random starting stats.  Maximum of 9 stats total
         //each stat is guaranteed a chance at having a value of 2 or more
         //each stat will be at least 1;
-        int speed = UnityEngine.Random.Range(0,5);
-        int sense = UnityEngine.Random.Range(0,7 - speed);
-        int breed = UnityEngine.Random.Range(0,9 - speed - sense);
+        int speed = UnityEngine.Random.Range(0,6);
+        int sense = UnityEngine.Random.Range(0,8 - speed);
+        int breed = UnityEngine.Random.Range(0,10 - speed - sense);
         int size = speed + sense + breed;
 
         // randomly add 1 stat until the size is at least 3
@@ -83,27 +85,32 @@ public class CritterManager : MonoBehaviour
         }
         return (speed, sense, breed);
     }
-    public void CritterBirth(int speed, int sense, int breed, int speciesNum, Color color)
+    public GameObject CritterBirth(int speed, int sense, int breed, int speciesNum, Color color, GameObject prefab, int energyToSpawnWith=80)
     {
 
         int xoffset = UnityEngine.Random.Range(-width + buffer, width - buffer);
         int yoffset = UnityEngine.Random.Range(-height + buffer, height - buffer);
 
-        GameObject critter = Instantiate(critterTemplate, new Vector3(transform.position.x + xoffset, transform.position.y + yoffset, 0), transform.rotation);
+        GameObject critter = Instantiate(prefab, new Vector3(transform.position.x + xoffset, transform.position.y + yoffset, 0), transform.rotation);
 
         critter.GetComponent<Critter>().speed = speed;
         critter.GetComponent<Critter>().sense = sense;
         critter.GetComponent<Critter>().breed = breed;
         critter.GetComponent<Critter>().speciesNum = speciesNum;
         critter.GetComponent<Critter>().color = color;
+        critter.GetComponent<Critter>().energy = energyToSpawnWith;
         critterBuilder.CreateCritter(speed, sense, breed, critter);
 
         speciesCount[speciesNum]++;
+
+        return critter;
     }
 
     public void CritterDeath(GameObject critter)
     {
         speciesCount[critter.GetComponent<Critter>().speciesNum]--;
+        critter.GetComponent<Critter>().dead = true;
+        critter.SetActive(false);
         Destroy(critter);
         if(speciesCount[critter.GetComponent<Critter>().speciesNum] == 0)
         {
@@ -111,10 +118,20 @@ public class CritterManager : MonoBehaviour
         }
     }
 
+    public void SpawnCarnivores(int speed, int sense, int breed, int energyToSpawnWith, int numToSpawn)
+    {
+        speciesCount.Add(++numSpeciesExisted, 0);
+        colors.Add(numSpeciesExisted, Color.white);
+        for(int i = 0; i < numToSpawn; i++){
+            CritterBirth(speed, sense, breed, numSpeciesExisted, Color.white, carnivoreTemplate, energyToSpawnWith);
+        }
+    }
+
     public void EvolveFromCritter(GameObject critterToEvolveFrom)
     {
         if(++numSpeciesExisted > MAX_NUM_SPECIES)
         {
+            numSpeciesExisted--;
             return;
         }
 
@@ -155,7 +172,7 @@ public class CritterManager : MonoBehaviour
 
         for(int i = 0; i < numInitialCrittersToSpawn; i++)
         {
-            CritterBirth(newSpeed, newSense, newBreed, newSpeciesNum, newColor);
+            CritterBirth(newSpeed, newSense, newBreed, newSpeciesNum, newColor, critterTemplate, critter.energy /2);
         }
         
     }

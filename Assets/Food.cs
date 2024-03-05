@@ -18,7 +18,7 @@ public class Food : MonoBehaviour
     void Start()
     {
         int num = UnityEngine.Random.Range(0,4);
-        energyValue = (num +1) * 10;
+        energyValue = (num +1) * 8;
         gameObject.GetComponent<Light2D>().color = colors[num];
         gameObject.GetComponent<Light2D>().pointLightOuterRadius = 1+(0.1f*num);
         gameObject.transform.localScale = new Vector3(1+(0.2f*num),1+(0.2f*num),0);
@@ -26,8 +26,12 @@ public class Food : MonoBehaviour
     }
     void OnTriggerEnter2D(Collider2D collision)
     {
-        Critter critter = collision.GetComponent<Critter>();
-        critter.EatFood(energyValue);
-        Destroy(gameObject);
+        if(collision.gameObject.tag == "Critter")
+        {
+            Critter critter = collision.GetComponent<Critter>();
+            critter.EatFood(energyValue);
+            Destroy(gameObject);
+        }
+        
     }
 }
