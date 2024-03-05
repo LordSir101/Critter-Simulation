@@ -24,7 +24,8 @@ public class Carnivore : Critter
     // Update is called once per frame
     void Update()
     {
-        if(!targetFood)
+        if(dead){return;}
+        if(!prey && (!foundFood || !targetFood))
         {
             ScanForFood();
         }
@@ -34,8 +35,8 @@ public class Carnivore : Critter
         
 
         if(Time.time - timeOfLastEnergyConsumption >= energyUsageInterval){
-            UseEnergy();
             AttemptBreed();
+            UseEnergy();   
         }
 
         if(Time.time - timeStartedEating >= eatSpeed && isEating)
@@ -83,13 +84,14 @@ public class Carnivore : Critter
                     mostEfficient = effciency;
                     targetFoodPos = new Vector3(xCoord,yCoord,0);
                     targetFood = collider.transform.gameObject;
+                    foundFood = true;
                 }
                 
             }
         }
 
         // if there is no food, create an invisible target to move towards at a random location near the critter;
-        if(foodFound == 0){
+        if(foodFound == 0 && !targetFood){
             //Vector3 mapSize = GameObject.FindAnyObjectByType<EnvironmentManager>().GetComponent<EnvironmentManager>().mapSize;
             int[] directions = {-1,1};
             float xCoord = UnityEngine.Random.Range(8,20) * directions[UnityEngine.Random.Range(0,2)];
@@ -97,6 +99,7 @@ public class Carnivore : Critter
             Vector3 targetPos = transform.position + new Vector3(xCoord, yCoord,0);
             targetFood = Instantiate(movementTarget, targetPos, transform.rotation);
             targetFoodPos = targetPos;
+            foundFood = false;
         }
         
     }
@@ -140,8 +143,8 @@ public class Carnivore : Critter
         // When a carnivore is eating, the prey and carnivore will drain energy from eachother until one dies based on size diff
         if(prey)
         {
-            int preyEnergyLost = (int) Math.Floor(Math.Pow(2, (size - prey.size + 1) * 0.4) * 10);
-            int energyUsed = (int) Math.Floor(Math.Pow(2, 0.3) * 10 / (size - prey.size +1));
+            int preyEnergyLost = (int) Math.Floor(Math.Pow(2, (size - prey.size + 1) * 0.4) * 12);
+            int energyUsed = (int) Math.Floor(Math.Pow(2, 0.3) * 5 / (size - prey.size +1));
 
             // Store the energy we take from the prey.  The carnivore gets it when the prey is dead
             energyTaken += prey.energy - preyEnergyLost <= 0 ? prey.energy : preyEnergyLost;
@@ -173,31 +176,30 @@ public class Carnivore : Critter
         //each point in breed gives approx 1% extra chance to breed
         int chance = UnityEngine.Random.Range(0,1000) - (10 * (breed+1) * breedScale);
 
-        if(energy > 60)
-        {
-            if (chance < 10) {
-                // int evolveChance = UnityEngine.Random.Range(0,100);
-                // if(evolveChance <= 1)
-                // {
-                //     critterManager.GetComponent<CritterManager>().EvolveFromCritter(gameObject);
-                // }
-                critterManager.GetComponent<CritterManager>().CritterBirth(speed, sense, breed, speciesNum, color, gameObject);
-                energy -= 60;
-            }
+        
+        if (chance < 10) {
+            // int evolveChance = UnityEngine.Random.Range(0,100);
+            // if(evolveChance <= 1)
+            // {
+            //     critterManager.GetComponent<CritterManager>().EvolveFromCritter(gameObject);
+            // }
+            energy -= energy/2;
+            critterManager.GetComponent<CritterManager>().CritterBirth(speed, sense, breed, speciesNum, color, gameObject, energy);
+            
         }
         
     }
 
-    private void UseEnergy()
-    {
-        energy -=  (int) Math.Floor(Math.Pow(size, 1.1f));
-        timeOfLastEnergyConsumption = Time.time;
+    // private void UseEnergy()
+    // {
+    //     energy -= (int) Math.Floor(Math.Pow(size, 1.5f) * 1.5 + 9-size);
+    //     timeOfLastEnergyConsumption = Time.time;
 
-        if(energy <= 0)
-        {
-            critterManager.GetComponent<CritterManager>().CritterDeath(gameObject);
-        }
-    }
+    //     if(energy <= 0)
+    //     {
+    //         critterManager.GetComponent<CritterManager>().CritterDeath(gameObject);
+    //     }
+    // }
 
     
 
