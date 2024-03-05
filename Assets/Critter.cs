@@ -10,25 +10,27 @@ public class Critter : MonoBehaviour
     public int speed;
     public int sense;
     public int breed;
+    public int size;
     public int speciesNum;
     public Color color = new Color32(0, 0, 0, 255 );
 
-    private float speedScale = 2f;
-    private int senseScale = 5;
-    private int breedScale = 2;
+    protected float speedScale = 2f;
+    protected int senseScale = 5;
+    protected int breedScale = 2;
 
     // Lifespan
-    private int energy = 60;
-    private float timeOfLastEnergyConsumption;
-    private int energyUsageRate = 6;
+    public int energy = 60;
+    protected float timeOfLastEnergyConsumption;
+    protected int energyUsageInterval = 5;
 
-    private GameObject critterManager;
+    //[SerializeField] protected GameObject critterManager;
+    protected GameObject critterManager;
 
     // Movement
     public GameObject movementTarget;
 
-    private Vector3 targetFoodPos;
-    private GameObject targetFood;
+    protected Vector3 targetFoodPos;
+    protected GameObject targetFood;
 
     public float timeOfCollsion;
     public bool inCollisionState = false;
@@ -37,9 +39,9 @@ public class Critter : MonoBehaviour
     public Sprite surprisedEyes;
     public Sprite normalEyes;
 
-    private LineRenderer lineRenderer;
+    protected LineRenderer lineRenderer;
 
-    private Button visionToggle;
+    protected Button visionToggle;
 
     void Start()
     {
@@ -64,7 +66,7 @@ public class Critter : MonoBehaviour
         }
         
 
-        if(Time.time - timeOfLastEnergyConsumption >= energyUsageRate){
+        if(Time.time - timeOfLastEnergyConsumption >= energyUsageInterval){
             UseEnergy();
             AttemptBreed();
         }
@@ -133,7 +135,7 @@ public class Critter : MonoBehaviour
         gameObject.GetComponent<Rigidbody2D>().velocity = directionToMove * (speed+1) * speedScale;
     }
 
-    private void DrawVision()
+    protected void DrawVision()
     {
         // draw a circle based on radius and subdivision
         // the line renderer is attatched to the critter and the circle will automatically move with it
@@ -161,7 +163,7 @@ public class Critter : MonoBehaviour
 
     private void UseEnergy()
     {
-        energy -=  (int) Math.Floor(Math.Pow(speed + sense + breed, 1.5));
+        energy -=  (int) Math.Floor(Math.Pow(size, 1.5f) * 1.2 + 9-size);
         timeOfLastEnergyConsumption = Time.time;
 
         if(energy <= 0)
@@ -184,7 +186,7 @@ public class Critter : MonoBehaviour
                 {
                     critterManager.GetComponent<CritterManager>().EvolveFromCritter(gameObject);
                 }
-                critterManager.GetComponent<CritterManager>().CritterBirth(speed, sense, breed, speciesNum, color);
+                critterManager.GetComponent<CritterManager>().CritterBirth(speed, sense, breed, speciesNum, color, gameObject);
                 energy -= 60;
             }
         }
@@ -218,8 +220,9 @@ public class Critter : MonoBehaviour
         lineRenderer.enabled = !lineRenderer.enabled;
     }
 
-    private void Setup()
+    protected void Setup()
     {
+        size = speed + sense + breed;
         // set up vision circle
         gameObject.GetComponent<Light2D>().color = color;
         lineRenderer = gameObject.GetComponent<LineRenderer>();

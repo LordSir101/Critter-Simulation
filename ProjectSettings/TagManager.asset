@@ -18,6 +18,8 @@ TagManager:
   - VisionToggle
   - EnvironmentManager
   - SpeciesCountUI
+  - BodyParts
+  - Carnivore
   layers:
   - Default
   - TransparentFX

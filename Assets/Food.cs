@@ -26,8 +26,12 @@ public class Food : MonoBehaviour
     }
     void OnTriggerEnter2D(Collider2D collision)
     {
-        Critter critter = collision.GetComponent<Critter>();
-        critter.EatFood(energyValue);
-        Destroy(gameObject);
+        if(collision.gameObject.tag == "Critter")
+        {
+            Critter critter = collision.GetComponent<Critter>();
+            critter.EatFood(energyValue);
+            Destroy(gameObject);
+        }
+        
     }
 }
