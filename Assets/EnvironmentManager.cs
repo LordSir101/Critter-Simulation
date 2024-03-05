@@ -16,7 +16,7 @@ public class EnvironmentManager : MonoBehaviour
 
     private int carnivoreSpawnInterval = 3;
 
-    private bool temp = true;
+    private int firstWave = 2;
 
     [SerializeField] private GameObject critterManager;
     // Start is called before the first frame update
@@ -34,10 +34,10 @@ public class EnvironmentManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // if(temp)
+        // if(day == 2 && !firstWave)
         // {
         //     SpawnCarnivores();
-        //     temp = false;
+        //     firstWave= true;
         // }
 
         if(Time.time - timeElapsed >= 60)
@@ -45,7 +45,7 @@ public class EnvironmentManager : MonoBehaviour
             day++;
             timeElapsed = Time.time;
 
-            if(day % carnivoreSpawnInterval == 0)
+            if(day % carnivoreSpawnInterval == firstWave)
             {
                 SpawnCarnivores();
             }
@@ -58,7 +58,7 @@ public class EnvironmentManager : MonoBehaviour
 
     void SpawnCarnivores()
     {
-        int numCarnivoreWaves = day / carnivoreSpawnInterval;
+        int numCarnivoreWaves = (day - firstWave) / carnivoreSpawnInterval + 1;
         int numCarnivoresToSpawn = 6 + numCarnivoreWaves / 2;
         int sizeOfCarnivore = 6 + numCarnivoreWaves / 2;
 
@@ -79,7 +79,9 @@ public class EnvironmentManager : MonoBehaviour
             currSize = speed + sense + breed;
         }
 
-        critterManager.GetComponent<CritterManager>().SpawnCarnivores(speed, sense, breed, numCarnivoresToSpawn);
+        int energytoSpawnWith = 80 + 15*day;
+
+        critterManager.GetComponent<CritterManager>().SpawnCarnivores(speed, sense, breed, energytoSpawnWith,numCarnivoresToSpawn);
 
     }
 }

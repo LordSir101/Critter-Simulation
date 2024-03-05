@@ -15,11 +15,12 @@ public class Critter : MonoBehaviour
     public Color color = new Color32(0, 0, 0, 255 );
 
     protected float speedScale = 2f;
-    protected int senseScale = 5;
-    protected int breedScale = 2;
+    protected int senseScale = 4;
+    protected int breedScale = 1;
+    public bool dead = false;
 
     // Lifespan
-    public int energy = 60;
+    public int energy = 80;
     protected float timeOfLastEnergyConsumption;
     protected int energyUsageInterval = 5;
 
@@ -31,6 +32,7 @@ public class Critter : MonoBehaviour
 
     protected Vector3 targetFoodPos;
     protected GameObject targetFood;
+    protected bool foundFood = false;
 
     public float timeOfCollsion;
     public bool inCollisionState = false;
@@ -52,11 +54,12 @@ public class Critter : MonoBehaviour
 
     void Update()
     {
+        if(dead){return;}
         if(Time.time - timeOfCollsion >= 1 && inCollisionState){
             inCollisionState = false;
             AnimateCollisionState();
         }
-        if(!targetFood)
+        if(!targetFood || !foundFood)
         {
             ScanForFood();
         }
@@ -67,8 +70,8 @@ public class Critter : MonoBehaviour
         
 
         if(Time.time - timeOfLastEnergyConsumption >= energyUsageInterval){
-            UseEnergy();
             AttemptBreed();
+            UseEnergy();
         }
     }
 
@@ -80,7 +83,7 @@ public class Critter : MonoBehaviour
     private void ScanForFood(){
         // Find nearby food based on sense stat
         List<Collider2D> nearbyFood = new List<Collider2D>();
-        Physics2D.OverlapCircle(new Vector2 (transform.position.x, transform.position.y), (sense+1)*senseScale, new ContactFilter2D().NoFilter(), nearbyFood);
+        Physics2D.OverlapCircle(new Vector2 (transform.position.x, transform.position.y), (sense+3)*senseScale, new ContactFilter2D().NoFilter(), nearbyFood);
 
         double mostEfficient = Int32.MinValue;
         int foodFound = 0;
@@ -103,13 +106,14 @@ public class Critter : MonoBehaviour
                     mostEfficient = effciency;
                     targetFoodPos = new Vector3(xCoord,yCoord,0);
                     targetFood = collider.transform.gameObject;
+                    foundFood = true;
                 }
                 
             }
         }
 
         // if there is no food, create an invisible target to move towards at a random location near the critter;
-        if(foodFound == 0){
+        if(foodFound == 0 && !targetFood){
             //Vector3 mapSize = GameObject.FindAnyObjectByType<EnvironmentManager>().GetComponent<EnvironmentManager>().mapSize;
             int[] directions = {-1,1};
             float xCoord = UnityEngine.Random.Range(8,20) * directions[UnityEngine.Random.Range(0,2)];
@@ -117,6 +121,7 @@ public class Critter : MonoBehaviour
             Vector3 targetPos = transform.position + new Vector3(xCoord, yCoord,0);
             targetFood = Instantiate(movementTarget, targetPos, transform.rotation);
             targetFoodPos = targetPos;
+            foundFood = false;
         }
         
     }
@@ -132,7 +137,7 @@ public class Critter : MonoBehaviour
         // normalize then scale the vector so that the critter always moves with a constant speed towards the target
         Vector3 directionToMove = targetFoodPos - transform.position;
         directionToMove.Normalize();
-        gameObject.GetComponent<Rigidbody2D>().velocity = directionToMove * (speed+1) * speedScale;
+        gameObject.GetComponent<Rigidbody2D>().velocity = directionToMove * (speed+2) * speedScale;
     }
 
     protected void DrawVision()
@@ -140,7 +145,7 @@ public class Critter : MonoBehaviour
         // draw a circle based on radius and subdivision
         // the line renderer is attatched to the critter and the circle will automatically move with it
         int subdivisions = 15;
-        float radius = (sense+1)*senseScale;
+        float radius = (sense+3)*senseScale;
 
         float angleStop = 2f * Mathf.PI / subdivisions;
         lineRenderer.positionCount = subdivisions;
@@ -161,34 +166,35 @@ public class Critter : MonoBehaviour
         energy += energyValue;
     }
 
-    private void UseEnergy()
+    protected void UseEnergy()
     {
-        energy -=  (int) Math.Floor(Math.Pow(size, 1.5f) * 1.2 + 9-size);
+        energy -=  (int) Math.Floor(Math.Pow(size, 1.5f) * 1.5 + 9-size);
         timeOfLastEnergyConsumption = Time.time;
 
         if(energy <= 0)
         {
             critterManager.GetComponent<CritterManager>().CritterDeath(gameObject);
         }
+
+        Debug.Log(speciesNum + ": " + energy);
     }
 
     private void AttemptBreed()
     {
         //each point in breed gives approx 1% extra chance to breed
-        int chance = UnityEngine.Random.Range(0,1000) - (10 * (breed+1) * breedScale);
+        int chance = UnityEngine.Random.Range(0,1000) - (15 * (breed+1) * breedScale);
 
-        if(energy > 60)
-        {
-            //TODO add a chance of evolving the species when a new one is born
-            if (chance < 10) {
-                int evolveChance = UnityEngine.Random.Range(0,100);
-                if(evolveChance <= 1)
-                {
-                    critterManager.GetComponent<CritterManager>().EvolveFromCritter(gameObject);
-                }
-                critterManager.GetComponent<CritterManager>().CritterBirth(speed, sense, breed, speciesNum, color, gameObject);
-                energy -= 60;
+       
+        //TODO add a chance of evolving the species when a new one is born
+        if (chance < 10) {
+            int evolveChance = UnityEngine.Random.Range(0,100);
+            if(evolveChance <= 2)
+            {
+                critterManager.GetComponent<CritterManager>().EvolveFromCritter(gameObject);
             }
+            energy -= energy/2;
+            critterManager.GetComponent<CritterManager>().CritterBirth(speed, sense, breed, speciesNum, color, gameObject, energy);
+            
         }
         
     }
