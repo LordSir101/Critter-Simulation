@@ -11,7 +11,7 @@ public class MovementTarget : MonoBehaviour
 
     void Start()
     {
-        timeSpawned = Time.time;
+       
     }
 
     void Update()
@@ -19,11 +19,18 @@ public class MovementTarget : MonoBehaviour
         // Movement target will destroy itself after 3 seconds no matter what in case it spawns out of bounds
         if(Time.time - timeSpawned >= timeToExist)
         {
-            Destroy(gameObject);
+            //Destroy(gameObject);
+            gameObject.SetActive(false);
         }
     }
     void OnTriggerEnter2D(Collider2D collision)
     { 
-        Destroy(gameObject);
+        // Destroy(gameObject);
+        gameObject.SetActive(false);
+    }
+
+    public void StartTimer()
+    {
+        timeSpawned = Time.time;
     }
 }
