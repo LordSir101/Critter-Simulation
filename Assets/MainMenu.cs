@@ -9,29 +9,38 @@ using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
 {
-    public int size = 0;
+    //public int size = 0;
 
-    public TextMeshProUGUI speedText;
-    public TextMeshProUGUI senseText;
-    public TextMeshProUGUI breedText;
+    [SerializeField] private TextMeshProUGUI speedText;
+    [SerializeField] private TextMeshProUGUI senseText;
+    [SerializeField] private TextMeshProUGUI breedText;
 
-    public critterBuilder critterBuilder;
+    [SerializeField] private TextMeshProUGUI helpText;    
 
-    public GameObject critterTemplate;
+    [SerializeField] private critterBuilder critterBuilder;
 
-    public GameObject preview;
+    [SerializeField] private GameObject critterTemplate;
+
+    private GameObject preview;
+    //[SerializeField] private Image tank;
 
     
     public void Start()
     {
         // Instatiate a critter so the player can see a preview of what it will look like
-        preview = Instantiate(critterTemplate, new Vector3(transform.position.x+7, transform.position.y, 0), transform.rotation);
+        preview = Instantiate(critterTemplate, new Vector3(transform.position.x + 7.5f, transform.position.y, 0), transform.rotation);
     }
 
     public void PlayGame()
     {
-        //TODO: don't let player start unless size >= 3
-        SceneManager.LoadSceneAsync("Game");
+        if(MenuInput.speed + MenuInput.sense + MenuInput.breed >= 3)
+        {
+            SceneManager.LoadSceneAsync("Game");
+        }
+        else
+        {
+            helpText.text = "Add at least 3 parts to your critter to start";
+        }
     }
 
     public void IncreaseSpeed()
@@ -75,7 +84,7 @@ public class MainMenu : MonoBehaviour
     {
         // Instantiate a new preview every time since buildcritter may destroy some components
         Destroy(preview);
-        preview = Instantiate(critterTemplate, new Vector3(transform.position.x + 7, transform.position.y , 0), transform.rotation);
+        preview = Instantiate(critterTemplate, new Vector3(transform.position.x + 7.5f, transform.position.y, 0), transform.rotation);
         critterBuilder.CreateCritter(MenuInput.speed, MenuInput.sense, MenuInput.breed, preview);
     }
 

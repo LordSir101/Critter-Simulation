@@ -16,13 +16,13 @@ public class Critter : MonoBehaviour
 
     protected float speedScale = 2f;
     protected int senseScale = 4;
-    protected int breedScale = 1;
+    protected int breedScale = 2;
     public bool dead = false;
 
     // Lifespan
     public int energy = 80;
     protected float timeOfLastEnergyConsumption;
-    protected int energyUsageInterval = 5;
+    protected int energyUsageInterval = 6;
 
     //[SerializeField] protected GameObject critterManager;
     protected GameObject critterManager;
@@ -188,7 +188,7 @@ public class Critter : MonoBehaviour
         //TODO add a chance of evolving the species when a new one is born
         if (chance < 10) {
             int evolveChance = UnityEngine.Random.Range(0,100);
-            if(evolveChance <= 2)
+            if(evolveChance <= 3)
             {
                 critterManager.GetComponent<CritterManager>().EvolveFromCritter(gameObject);
             }

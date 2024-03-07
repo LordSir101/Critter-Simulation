@@ -158,7 +158,11 @@ public class Carnivore : Critter
             if(prey.energy <= 0)
             {
                 Debug.Log("prey dead");
-                critterManager.GetComponent<CritterManager>().CritterDeath(prey.gameObject);
+                if(prey) //in case two carnivores attack the same target
+                {
+                    critterManager.GetComponent<CritterManager>().CritterDeath(prey.gameObject);
+                }
+                
             }
  
         }
@@ -174,7 +178,7 @@ public class Carnivore : Critter
     private void AttemptBreed()
     {
         //each point in breed gives approx 1% extra chance to breed
-        int chance = UnityEngine.Random.Range(0,1000) - (10 * (breed+1) * breedScale);
+        int chance = UnityEngine.Random.Range(0,1000) - (12 * (breed+1) * breedScale);
 
         
         if (chance < 10) {
