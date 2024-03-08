@@ -154,17 +154,17 @@ public class CritterManager : MonoBehaviour
 
     public void CritterDeath(GameObject critter)
     {
-        speciesCount[critter.GetComponent<Critter>().speciesNum]--;
-        Debug.Log("Count: " + speciesCount[critter.GetComponent<Critter>().speciesNum] + " " + critter.GetComponent<Critter>().speciesNum);
-        //critter.GetComponent<Critter>().dead = true;
-        //Destroy(critter);
-        //critter.SetActive(false);
-        if(speciesCount[critter.GetComponent<Critter>().speciesNum] == 0)
+        if(critter.activeInHierarchy)
         {
-            speciesCount.Remove(critter.GetComponent<Critter>().speciesNum);
-            critterPoolPool.Remove(critter.GetComponent<Critter>().speciesNum);
-        }
-        critter.SetActive(false);
+            speciesCount[critter.GetComponent<Critter>().speciesNum]--;
+            if(speciesCount[critter.GetComponent<Critter>().speciesNum] == 0)
+            {
+                speciesCount.Remove(critter.GetComponent<Critter>().speciesNum);
+                critterPoolPool.Remove(critter.GetComponent<Critter>().speciesNum);
+            }
+            critter.SetActive(false);
+
+        }       
     }
 
     public void SpawnCarnivores(int speed, int sense, int breed, int energyToSpawnWith, int numToSpawn)
@@ -190,7 +190,6 @@ public class CritterManager : MonoBehaviour
     {
         if(speciesCount.Count >= MAX_NUM_SPECIES)
         {
-            //numSpeciesExisted--;
             return;
         }
 

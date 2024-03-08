@@ -26,7 +26,8 @@ public class Carnivore : Critter
     void Update()
     {
         //if(dead){return;}
-        if(!isEating && (!foundFood || !targetFood.activeInHierarchy))
+        // /&& Time.time - timeOfLastScan >= 0.5f
+        if(!isEating )
         {
             ScanForFood();
         }
@@ -54,9 +55,10 @@ public class Carnivore : Critter
     }
 
     private void ScanForFood(){
+        timeOfLastScan = Time.time;
         // Find nearby food based on sense stat
         List<Collider2D> nearbyFood = new List<Collider2D>();
-        Physics2D.OverlapCircle(new Vector2 (transform.position.x, transform.position.y), (sense+1)*senseScale, new ContactFilter2D().NoFilter(), nearbyFood);
+        Physics2D.OverlapCircle(new Vector2 (transform.position.x, transform.position.y), (sense+3)*senseScale, new ContactFilter2D().NoFilter(), nearbyFood);
 
         double mostEfficient = Int32.MinValue;
         int foodFound = 0;
@@ -86,28 +88,18 @@ public class Carnivore : Critter
                     targetFoodPos = new Vector3(xCoord,yCoord,0);
                     targetFood = collider.transform.gameObject;
                     foundFood = true;
+                    goToMovmentTarget = false;
                 }
                 
             }
         }
 
-         if(foodFound == 0 && !targetFood.activeInHierarchy){
-            targetFood = FoodSpawner.SharedInstance.getMovementTarget(transform.position);
+         if(foodFound == 0 && (!targetFood.activeInHierarchy || !goToMovmentTarget)){
+            targetFood = FoodSpawner.SharedInstance.getMovementTarget(gameObject, transform.position);
             targetFoodPos = targetFood.transform.position;
             foundFood = false;
+            goToMovmentTarget = true;
         }
-
-        // if there is no food, create an invisible target to move towards at a random location near the critter;
-        // if(foodFound == 0 && !targetFood.activeInHierarchy){
-        //     //Vector3 mapSize = GameObject.FindAnyObjectByType<EnvironmentManager>().GetComponent<EnvironmentManager>().mapSize;
-        //     int[] directions = {-1,1};
-        //     float xCoord = UnityEngine.Random.Range(8,20) * directions[UnityEngine.Random.Range(0,2)];
-        //     float yCoord = UnityEngine.Random.Range(8,20) * directions[UnityEngine.Random.Range(0,2)];
-        //     Vector3 targetPos = transform.position + new Vector3(xCoord, yCoord,0);
-        //     targetFood = Instantiate(movementTarget, targetPos, transform.rotation);
-        //     targetFoodPos = targetPos;
-        //     foundFood = false;
-        // }
         
     }
 
@@ -135,7 +127,7 @@ public class Carnivore : Critter
         {
             if(prey.gameObject.activeInHierarchy)
             {
-                gameObject.transform.position = prey.gameObject.transform.position + new Vector3(0.5f,0.5f,0);
+                gameObject.transform.position = prey.gameObject.transform.position + new Vector3(1f,1f,0);
             }
         }
         else
@@ -153,38 +145,29 @@ public class Carnivore : Critter
         // When a carnivore is eating, the prey and carnivore will drain energy from eachother until one dies based on size diff
         if(isEating)
         {
-            if(prey.gameObject.activeInHierarchy)
+            int preyEnergyLost = (int) Math.Floor(Math.Pow(2, (size - prey.size + 1) * 0.4) * 12);
+            int energyUsed = (int) Math.Floor(Math.Pow(2, 0.3) * 5 / (size - prey.size +1));
+
+            // Store the energy we take from the prey.  The carnivore gets it when the prey is dead
+            energyTaken += prey.energy - preyEnergyLost <= 0 ? prey.energy : preyEnergyLost;
+            prey.energy -= preyEnergyLost;
+            energy -= energyUsed;
+
+            if(energy <= 0)
             {
-                int preyEnergyLost = (int) Math.Floor(Math.Pow(2, (size - prey.size + 1) * 0.4) * 12);
-                int energyUsed = (int) Math.Floor(Math.Pow(2, 0.3) * 5 / (size - prey.size +1));
-
-                // Store the energy we take from the prey.  The carnivore gets it when the prey is dead
-                energyTaken += prey.energy - preyEnergyLost <= 0 ? prey.energy : preyEnergyLost;
-                prey.energy -= preyEnergyLost;
-                energy -= energyUsed;
-
-                if(energy <= 0)
-                {
-                    CritterManager.SharedInstance.CritterDeath(gameObject);
-                }
-                if(prey.energy <= 0)
-                {
-                    // Debug.Log(prey.speciesNum + " " + prey.energy);
-                    // Debug.Log("prey dead " + prey.speciesNum);
-                    if(prey.gameObject.activeInHierarchy) //in case two carnivores attack the same target
-                    {
-                        CritterManager.SharedInstance.CritterDeath(prey.gameObject);
-                    }
-                    
-                }
-    
+                CritterManager.SharedInstance.CritterDeath(gameObject);
             }
-            else
+            if(prey.energy <= 0)
             {
+                if(prey.gameObject.activeInHierarchy) //in case two carnivores attack the same target
+                {
+                    CritterManager.SharedInstance.CritterDeath(prey.gameObject);
+                }
                 energy += energyTaken;
                 isEating = false;
                 energyTaken = 0;
                 gameObject.GetComponent<Rigidbody2D>().simulated = true;
+                
             }
         }
         

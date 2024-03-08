@@ -102,28 +102,44 @@ public class FoodSpawner : MonoBehaviour
                 if (newFood != null) {
                     newFood.transform.position = new Vector3(xpos,ypos,0);
                     newFood.transform.rotation = transform.rotation;
+                    
+                    int num = UnityEngine.Random.Range(0,4);
+                    newFood.GetComponent<Food>().energyValue = (num +1) * 8;
+                    newFood.GetComponent<Light2D>().color = colors[num];
+                    newFood.GetComponent<Light2D>().pointLightOuterRadius = 1+(0.1f*num);
+                    newFood.transform.localScale = new Vector3(1+(0.2f*num),1+(0.2f*num),0);
                     newFood.SetActive(true);
                 }
-
-                int num = UnityEngine.Random.Range(0,4);
-                newFood.GetComponent<Food>().energyValue = (num +1) * 8;
-                newFood.GetComponent<Light2D>().color = colors[num];
-                newFood.GetComponent<Light2D>().pointLightOuterRadius = 1+(0.1f*num);
-                newFood.transform.localScale = new Vector3(1+(0.2f*num),1+(0.2f*num),0);
             }
     }
 
-    public GameObject getMovementTarget(Vector3 critterPos)
+    public GameObject getMovementTarget(GameObject critter, Vector3 critterPos)
     {
+        int buffer = 3;
+        int width = (int)mapSize[0] / 2;
+        int height = (int)mapSize[1] / 2;
+
+        // int xpos = UnityEngine.Random.Range(-width + buffer, width - buffer);
+        // int ypos = UnityEngine.Random.Range(-height + buffer, height - buffer);
+        // Vector3 dir = new Vector3(xpos,ypos,0) - critterPos;
+        // dir.Normalize();
+        // dir *= UnityEngine.Random.Range(15, 30);
+
+        // dir.x = dir.x > width - buffer ? width - buffer : dir.x;
+        // dir.x = dir.x < -width + buffer ? -width + buffer : dir.x;
+        // dir.y = dir.y > height - buffer ? height - buffer : dir.y;
+        // dir.y = dir.y < -height + buffer ? -height + buffer : dir.y;
+
         int[] directions = {-1,1};
         float xCoord = UnityEngine.Random.Range(8,20) * directions[UnityEngine.Random.Range(0,2)];
         float yCoord = UnityEngine.Random.Range(8,20) * directions[UnityEngine.Random.Range(0,2)];
-        Vector3 targetPos = critterPos + new Vector3(xCoord, yCoord,0);
+        Vector3 targetPos = critterPos + new Vector3(xCoord, yCoord,0);//dir;
         //targetFood = Instantiate(movementTarget, targetPos, transform.rotation);
         GameObject movementTarget = SharedInstance.GetPooledMovementTarget(); 
         if (movementTarget != null) {
             movementTarget.transform.position = targetPos;
             movementTarget.transform.rotation = transform.rotation;
+            movementTarget.GetComponent<MovementTarget>().critter = critter;
             movementTarget.SetActive(true);
             movementTarget.GetComponent<MovementTarget>().StartTimer();
         }

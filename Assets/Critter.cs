@@ -17,23 +17,20 @@ public class Critter : MonoBehaviour
     protected float speedScale = 2f;
     protected int senseScale = 4;
     protected int breedScale = 2;
-    //public bool isDead = false;
 
     // Lifespan
     public int energy = 80;
     protected float timeOfLastEnergyConsumption;
     protected int energyUsageInterval = 6;
 
-    //[SerializeField] protected GameObject critterManager;
-    protected GameObject critterManager;
-    //protected GameObject foodSpawner;
+    //protected GameObject critterManager;
 
-    // Movement
-    //public GameObject movementTarget;
-
+    // Food
     protected Vector3 targetFoodPos;
     protected GameObject targetFood;
     protected bool foundFood = false;
+    public bool goToMovmentTarget = true;
+    protected float timeOfLastScan;
 
     public float timeOfCollsion;
     public bool inCollisionState = false;
@@ -45,8 +42,6 @@ public class Critter : MonoBehaviour
     protected LineRenderer lineRenderer;
 
     protected Button visionToggle;
-
-    private int temp = 0;
 
     void Start()
     {
@@ -62,10 +57,11 @@ public class Critter : MonoBehaviour
             inCollisionState = false;
             AnimateCollisionState();
         }
-        if(!targetFood.activeInHierarchy || !foundFood)
-        {
-            ScanForFood();
-        }
+        // if(Time.time - timeOfLastScan >= 0.5f)
+        // {
+            
+        // }
+        ScanForFood();
 
         if(lineRenderer.enabled){
             DrawVision();
@@ -84,6 +80,7 @@ public class Critter : MonoBehaviour
     }
 
     private void ScanForFood(){
+        timeOfLastScan = Time.time;
         // Find nearby food based on sense stat
         List<Collider2D> nearbyFood = new List<Collider2D>();
         Physics2D.OverlapCircle(new Vector2 (transform.position.x, transform.position.y), (sense+3)*senseScale, new ContactFilter2D().NoFilter(), nearbyFood);
@@ -110,23 +107,16 @@ public class Critter : MonoBehaviour
                     targetFoodPos = new Vector3(xCoord,yCoord,0);
                     targetFood = collider.transform.gameObject;
                     foundFood = true;
+                    goToMovmentTarget = false;
                 }
                 
             }
         }
 
         // if there is no food, create an invisible target to move towards at a random location near the critter;
-        // if(!targetFood)
-        // {
-        //     targetFood = foodSpawner.GetComponent<FoodSpawner>().getMovementTarget(transform.position);
-        //     targetFoodPos = targetFood.transform.position;
-        //     foundFood = false;
-        // }
-        if(foodFound == 0 && !targetFood.activeInHierarchy){
-            temp++;
-            Debug.Log("MovementTarget " + temp);
+        if(foodFound == 0 && (!targetFood.activeInHierarchy || !goToMovmentTarget)){
             
-            targetFood = FoodSpawner.SharedInstance.getMovementTarget(transform.position);
+            targetFood = FoodSpawner.SharedInstance.getMovementTarget(gameObject, transform.position);
             //Vector3 mapSize = GameObject.FindAnyObjectByType<EnvironmentManager>().GetComponent<EnvironmentManager>().mapSize;
             // int[] directions = {-1,1};
             // float xCoord = UnityEngine.Random.Range(8,20) * directions[UnityEngine.Random.Range(0,2)];
@@ -135,6 +125,7 @@ public class Critter : MonoBehaviour
             //targetFood = Instantiate(movementTarget, targetPos, transform.rotation);
             targetFoodPos = targetFood.transform.position;
             foundFood = false;
+            goToMovmentTarget = true;
         }
         
     }
@@ -261,7 +252,7 @@ public class Critter : MonoBehaviour
         lineRenderer.enabled = manager.showLines;
 
         // foodSpawner = GameObject.FindGameObjectWithTag("FoodSpawner");
-        targetFood = FoodSpawner.SharedInstance.getMovementTarget(transform.position);
+        targetFood = FoodSpawner.SharedInstance.getMovementTarget(gameObject, transform.position);
         targetFoodPos = targetFood.transform.position;
     }
 
