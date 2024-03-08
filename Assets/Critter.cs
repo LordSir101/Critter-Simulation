@@ -17,22 +17,20 @@ public class Critter : MonoBehaviour
     protected float speedScale = 2f;
     protected int senseScale = 4;
     protected int breedScale = 2;
-    public bool dead = false;
 
     // Lifespan
     public int energy = 80;
     protected float timeOfLastEnergyConsumption;
     protected int energyUsageInterval = 6;
 
-    //[SerializeField] protected GameObject critterManager;
-    protected GameObject critterManager;
+    //protected GameObject critterManager;
 
-    // Movement
-    public GameObject movementTarget;
-
+    // Food
     protected Vector3 targetFoodPos;
     protected GameObject targetFood;
     protected bool foundFood = false;
+    public bool goToMovmentTarget = true;
+    protected float timeOfLastScan;
 
     public float timeOfCollsion;
     public bool inCollisionState = false;
@@ -54,15 +52,16 @@ public class Critter : MonoBehaviour
 
     void Update()
     {
-        if(dead){return;}
+        //if(dead){return;}
         if(Time.time - timeOfCollsion >= 1 && inCollisionState){
             inCollisionState = false;
             AnimateCollisionState();
         }
-        if(!targetFood || !foundFood)
-        {
-            ScanForFood();
-        }
+        // if(Time.time - timeOfLastScan >= 0.5f)
+        // {
+            
+        // }
+        ScanForFood();
 
         if(lineRenderer.enabled){
             DrawVision();
@@ -81,6 +80,7 @@ public class Critter : MonoBehaviour
     }
 
     private void ScanForFood(){
+        timeOfLastScan = Time.time;
         // Find nearby food based on sense stat
         List<Collider2D> nearbyFood = new List<Collider2D>();
         Physics2D.OverlapCircle(new Vector2 (transform.position.x, transform.position.y), (sense+3)*senseScale, new ContactFilter2D().NoFilter(), nearbyFood);
@@ -107,21 +107,25 @@ public class Critter : MonoBehaviour
                     targetFoodPos = new Vector3(xCoord,yCoord,0);
                     targetFood = collider.transform.gameObject;
                     foundFood = true;
+                    goToMovmentTarget = false;
                 }
                 
             }
         }
 
         // if there is no food, create an invisible target to move towards at a random location near the critter;
-        if(foodFound == 0 && !targetFood){
+        if(foodFound == 0 && (!targetFood.activeInHierarchy || !goToMovmentTarget)){
+            
+            targetFood = FoodSpawner.SharedInstance.getMovementTarget(gameObject, transform.position);
             //Vector3 mapSize = GameObject.FindAnyObjectByType<EnvironmentManager>().GetComponent<EnvironmentManager>().mapSize;
-            int[] directions = {-1,1};
-            float xCoord = UnityEngine.Random.Range(8,20) * directions[UnityEngine.Random.Range(0,2)];
-            float yCoord = UnityEngine.Random.Range(8,20) * directions[UnityEngine.Random.Range(0,2)];
-            Vector3 targetPos = transform.position + new Vector3(xCoord, yCoord,0);
-            targetFood = Instantiate(movementTarget, targetPos, transform.rotation);
-            targetFoodPos = targetPos;
+            // int[] directions = {-1,1};
+            // float xCoord = UnityEngine.Random.Range(8,20) * directions[UnityEngine.Random.Range(0,2)];
+            // float yCoord = UnityEngine.Random.Range(8,20) * directions[UnityEngine.Random.Range(0,2)];
+            // Vector3 targetPos = transform.position + new Vector3(xCoord, yCoord,0);
+            //targetFood = Instantiate(movementTarget, targetPos, transform.rotation);
+            targetFoodPos = targetFood.transform.position;
             foundFood = false;
+            goToMovmentTarget = true;
         }
         
     }
@@ -173,10 +177,10 @@ public class Critter : MonoBehaviour
 
         if(energy <= 0)
         {
-            critterManager.GetComponent<CritterManager>().CritterDeath(gameObject);
+            CritterManager.SharedInstance.CritterDeath(gameObject);
         }
 
-        Debug.Log(speciesNum + ": " + energy);
+        //Debug.Log(speciesNum + ": " + energy);
     }
 
     private void AttemptBreed()
@@ -190,10 +194,10 @@ public class Critter : MonoBehaviour
             int evolveChance = UnityEngine.Random.Range(0,100);
             if(evolveChance <= 3)
             {
-                critterManager.GetComponent<CritterManager>().EvolveFromCritter(gameObject);
+                CritterManager.SharedInstance.EvolveFromCritter(gameObject);
             }
             energy -= energy/2;
-            critterManager.GetComponent<CritterManager>().CritterBirth(speed, sense, breed, speciesNum, color, gameObject, energy);
+            CritterManager.SharedInstance.CritterBirth(speed, sense, breed, speciesNum, color, gameObject, energy);
             
         }
         
@@ -238,7 +242,7 @@ public class Critter : MonoBehaviour
             new GradientAlphaKey[] { new GradientAlphaKey(1.0f, 0.0f), new GradientAlphaKey(1.0f, 1.0f) }
         );
         lineRenderer.colorGradient = gradient;
-        critterManager = GameObject.FindGameObjectWithTag("CritterManager");
+        //critterManager = GameObject.FindGameObjectWithTag("CritterManager");
 
         visionToggle = GameObject.FindGameObjectWithTag("VisionToggle").GetComponent<Button>();
         visionToggle.onClick.AddListener(ToggleLineRenderer);
@@ -246,6 +250,10 @@ public class Critter : MonoBehaviour
         // toggle the initial state of line renderer to avoid desync when critters spawn
         EnvironmentManager manager = GameObject.FindGameObjectWithTag("EnvironmentManager").GetComponent<EnvironmentManager>();
         lineRenderer.enabled = manager.showLines;
+
+        // foodSpawner = GameObject.FindGameObjectWithTag("FoodSpawner");
+        targetFood = FoodSpawner.SharedInstance.getMovementTarget(gameObject, transform.position);
+        targetFoodPos = targetFood.transform.position;
     }
 
 }

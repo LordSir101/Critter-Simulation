@@ -17383,7 +17383,7 @@ GameObject:
   - component: {fileID: 2019816839}
   m_Layer: 0
   m_Name: FoodSpawner
-  m_TagString: Untagged
+  m_TagString: FoodSpawner
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -17401,6 +17401,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   food: {fileID: 2671516005215831333, guid: bbf23b3f06d314e4a8168848ea435310, type: 3}
+  movementTarget: {fileID: 7948002133433096677, guid: b8e5931ef150fa5479e18764bf7de14e, type: 3}
+  pooledFood: []
+  pooledMovementTargets: []
+  amountToPool: 200
 --- !u!4 &2019816840
 Transform:
   m_ObjectHideFlags: 0

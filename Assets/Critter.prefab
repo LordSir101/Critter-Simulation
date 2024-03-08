@@ -228,9 +228,10 @@ MonoBehaviour:
   speed: 0
   sense: 0
   breed: 0
+  size: 0
   speciesNum: 0
   color: {r: 0, g: 0, b: 0, a: 1}
-  movementTarget: {fileID: 7948002133433096677, guid: b8e5931ef150fa5479e18764bf7de14e, type: 3}
+  energy: 80
   timeOfCollsion: 0
   inCollisionState: 0
   surprisedEyes: {fileID: 21300000, guid: b1c72e74f5b569e45817c42f6ef02737, type: 3}
@@ -250,9 +251,9 @@ MonoBehaviour:
   m_ComponentVersion: 1
   m_LightType: 3
   m_BlendStyleIndex: 0
-  m_FalloffIntensity: 0.5
+  m_FalloffIntensity: 0.3
   m_Color: {r: 0.8113208, g: 0.049750824, b: 0.049750824, a: 1}
-  m_Intensity: 3
+  m_Intensity: 2
   m_LightVolumeIntensity: 1
   m_LightVolumeIntensityEnabled: 0
   m_ApplyToSortingLayers: 3be23d15035fbb4100000000
@@ -302,7 +303,7 @@ MonoBehaviour:
     m_Extent: {x: 0.9985302, y: 0.99853027, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
-  m_PointLightInnerRadius: 0
+  m_PointLightInnerRadius: 1
   m_PointLightOuterRadius: 3
   m_ShapeLightParametricSides: 5
   m_ShapeLightParametricAngleOffset: 0
