@@ -232,6 +232,7 @@ MonoBehaviour:
   speciesNum: 0
   color: {r: 0, g: 0, b: 0, a: 1}
   energy: 80
+  goToMovmentTarget: 1
   timeOfCollsion: 0
   inCollisionState: 0
   surprisedEyes: {fileID: 21300000, guid: b1c72e74f5b569e45817c42f6ef02737, type: 3}
@@ -253,7 +254,7 @@ MonoBehaviour:
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 0.3
   m_Color: {r: 0.8113208, g: 0.049750824, b: 0.049750824, a: 1}
-  m_Intensity: 2
+  m_Intensity: 3
   m_LightVolumeIntensity: 1
   m_LightVolumeIntensityEnabled: 0
   m_ApplyToSortingLayers: 3be23d15035fbb4100000000

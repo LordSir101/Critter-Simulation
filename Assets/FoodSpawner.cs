@@ -94,23 +94,23 @@ public class FoodSpawner : MonoBehaviour
         int height = (int)mapSize[1] / 2;
 
         for(int i = 0; i < numFoodToSpawn; i++){
-                int xpos = UnityEngine.Random.Range(-width + buffer, width - buffer);
-                int ypos = UnityEngine.Random.Range(-height + buffer, height - buffer);
+            int xpos = UnityEngine.Random.Range(-width + buffer, width - buffer);
+            int ypos = UnityEngine.Random.Range(-height + buffer, height - buffer);
 
-                //Food newFood = Instantiate(food, new Vector3(xpos,ypos,0), transform.rotation).GetComponent<Food>();
-                GameObject newFood = SharedInstance.GetPooledFood(); 
-                if (newFood != null) {
-                    newFood.transform.position = new Vector3(xpos,ypos,0);
-                    newFood.transform.rotation = transform.rotation;
-                    
-                    int num = UnityEngine.Random.Range(0,4);
-                    newFood.GetComponent<Food>().energyValue = (num +1) * 8;
-                    newFood.GetComponent<Light2D>().color = colors[num];
-                    newFood.GetComponent<Light2D>().pointLightOuterRadius = 1+(0.1f*num);
-                    newFood.transform.localScale = new Vector3(1+(0.2f*num),1+(0.2f*num),0);
-                    newFood.SetActive(true);
-                }
+            //Food newFood = Instantiate(food, new Vector3(xpos,ypos,0), transform.rotation).GetComponent<Food>();
+            GameObject newFood = SharedInstance.GetPooledFood(); 
+            if (newFood != null) {
+                newFood.transform.position = new Vector3(xpos,ypos,0);
+                newFood.transform.rotation = transform.rotation;
+                
+                int num = UnityEngine.Random.Range(0,4);
+                newFood.GetComponent<Food>().energyValue = (num +1) * 8;
+                newFood.GetComponent<Light2D>().color = colors[num];
+                newFood.GetComponent<Light2D>().pointLightOuterRadius = 1+(0.1f*num);
+                newFood.transform.localScale = new Vector3(1+(0.2f*num),1+(0.2f*num),0);
+                newFood.SetActive(true);
             }
+        }
     }
 
     public GameObject getMovementTarget(GameObject critter, Vector3 critterPos)
