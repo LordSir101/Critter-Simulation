@@ -13,20 +13,38 @@ public class EnvironmentManager : MonoBehaviour
 
     public int day = 1;
     float timeElapsed;
+    private int dayLength = 60;
 
     private int carnivoreSpawnInterval = 3;
+    private int firstWave = 2;
 
-    private int firstWave = 1;
+    private int upgradeInterval;
+    private int firstUpgrade;
+
     private bool firstWaveSpawned = false;
 
-    [SerializeField] private GameObject critterManager;
+    //[SerializeField] private GameObject critterManager;
+    [SerializeField] private GameObject uiManager;
+
+    public static EnvironmentManager SharedInstance;
+
+    void Awake()
+    {
+        SharedInstance = this;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
+        upgradeInterval = carnivoreSpawnInterval;
+        firstUpgrade = firstWave + 1;
+
         mapSize = GameObject.FindGameObjectWithTag("PlayableArea").GetComponent<Tilemap>().size;
 
         visionToggle = GameObject.FindGameObjectWithTag("VisionToggle").GetComponent<Button>();
         visionToggle.onClick.AddListener(ToggleShowLines);
+
+        uiManager.GetComponent<UIManager>().setDay(day);
 
         timeElapsed = Time.time;
         
@@ -35,21 +53,22 @@ public class EnvironmentManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(day == 1 && !firstWaveSpawned )
-        {
-            SpawnCarnivores();
-            firstWaveSpawned = true;
-        }
+        // if(day == 1 && !firstWaveSpawned )
+        // {
+        //     SpawnCarnivores();
+        //     firstWaveSpawned = true;
+        // }
 
-        if(Time.time - timeElapsed >= 60)
+        if(Time.time - timeElapsed >= dayLength)
         {
             day++;
             timeElapsed = Time.time;
 
-            if(day % carnivoreSpawnInterval == firstWave)
-            {
-                SpawnCarnivores();
-            }
+            uiManager.GetComponent<UIManager>().setDay(day);
+
+            SpawnCarnivores();
+            StartUpgrade();
+        
         }
     }
     void ToggleShowLines()
@@ -57,32 +76,48 @@ public class EnvironmentManager : MonoBehaviour
         showLines = !showLines;
     }
 
+    
+    void StartUpgrade()
+    {
+        // if(day % upgradeInterval == firstUpgrade)
+        // {
+        //     PauseControl.PauseGame();
+        //     uiManager.GetComponent<UIManager>().ShowUpgradeMenu();
+        // }
+        
+        gameObject.GetComponent<UpgradeManager>().Upgrade(uiManager.GetComponent<UpgradePanelManager>());
+        
+    }
+
     void SpawnCarnivores()
     {
-        int numCarnivoreWaves = (day - firstWave) / carnivoreSpawnInterval + 1;
-        int numCarnivoresToSpawn = 6 + numCarnivoreWaves / 2;
-        int sizeOfCarnivore = 6 + numCarnivoreWaves / 2;
-
-
-        int speed = UnityEngine.Random.Range(1,sizeOfCarnivore -2);
-        int sense = UnityEngine.Random.Range(1,sizeOfCarnivore - speed);
-        int breed = UnityEngine.Random.Range(1,sizeOfCarnivore - speed - sense);
-        int currSize = speed + sense + breed;
-
-        // randomly add 1 stat until the size is at min size for the wave
-        while(currSize < sizeOfCarnivore)
+        if(day % carnivoreSpawnInterval == firstWave)
         {
-            int[]stats = {speed, sense, breed};
-            stats[UnityEngine.Random.Range(0,3)]++;
-            speed = stats[0];
-            sense = stats[1];
-            breed = stats[2];
-            currSize = speed + sense + breed;
+            int numCarnivoreWaves = (day - firstWave) / carnivoreSpawnInterval + 1;
+            int numCarnivoresToSpawn = 6 + numCarnivoreWaves / 2;
+            int sizeOfCarnivore = 6 + numCarnivoreWaves / 2;
+
+
+            int speed = UnityEngine.Random.Range(1,sizeOfCarnivore -2);
+            int sense = UnityEngine.Random.Range(1,sizeOfCarnivore - speed);
+            int breed = UnityEngine.Random.Range(1,sizeOfCarnivore - speed - sense);
+            int currSize = speed + sense + breed;
+
+            // randomly add 1 stat until the size is at min size for the wave
+            while(currSize < sizeOfCarnivore)
+            {
+                int[]stats = {speed, sense, breed};
+                stats[UnityEngine.Random.Range(0,3)]++;
+                speed = stats[0];
+                sense = stats[1];
+                breed = stats[2];
+                currSize = speed + sense + breed;
+            }
+
+            int energytoSpawnWith = 80 + 15*day;
+
+            CritterManager.SharedInstance.SpawnCarnivores(speed, sense, breed, energytoSpawnWith,numCarnivoresToSpawn);
         }
-
-        int energytoSpawnWith = 80 + 15*day;
-
-        CritterManager.SharedInstance.SpawnCarnivores(speed, sense, breed, energytoSpawnWith,numCarnivoresToSpawn);
 
     }
 }

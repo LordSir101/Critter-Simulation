@@ -31,9 +31,9 @@ public class Carnivore : Critter
         {
             ScanForFood();
         }
-        if(lineRenderer.enabled){
-            DrawVision();
-        }
+        // if(lineRenderer.enabled){
+        //     DrawVision();
+        // }
         
 
         if(Time.time - timeOfLastEnergyConsumption >= energyUsageInterval){
@@ -58,7 +58,7 @@ public class Carnivore : Critter
         timeOfLastScan = Time.time;
         // Find nearby food based on sense stat
         List<Collider2D> nearbyFood = new List<Collider2D>();
-        Physics2D.OverlapCircle(new Vector2 (transform.position.x, transform.position.y), (sense+3)*senseScale, new ContactFilter2D().NoFilter(), nearbyFood);
+        Physics2D.OverlapCircle(new Vector2 (transform.position.x, transform.position.y), (sense+baseSense)*senseScale, new ContactFilter2D().NoFilter(), nearbyFood);
 
         double mostEfficient = Int32.MinValue;
         int foodFound = 0;
@@ -121,7 +121,7 @@ public class Carnivore : Critter
         // Euler will get a rotation of the sprite's about the z axis towards the given angle
         // The rotation points the x axis to the target.  we add 270 degrees to the angle so the y axis points to the target instead
         Quaternion targetRotation = Quaternion.Euler(new Vector3(0, 0, angle - 90));
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, (speed+1) * speedScale * 20 * Time.deltaTime);
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, (speed+baseSpeed) * speedScale * 20 * Time.deltaTime);
 
         if(isEating)
         {
@@ -135,7 +135,7 @@ public class Carnivore : Critter
             // normalize then scale the vector so that the critter always moves with a constant speed towards the target
             Vector3 directionToMove = targetFoodPos - transform.position;
             directionToMove.Normalize();
-            gameObject.GetComponent<Rigidbody2D>().velocity = directionToMove * (speed+1) * speedScale;
+            gameObject.GetComponent<Rigidbody2D>().velocity = directionToMove * (speed+baseSpeed) * speedScale;
         }
        
     }
@@ -176,7 +176,7 @@ public class Carnivore : Critter
     private void AttemptBreed()
     {
         //each point in breed gives approx 1% extra chance to breed
-        int chance = UnityEngine.Random.Range(0,1000) - (12 * (breed+1) * breedScale);
+        float chance = UnityEngine.Random.Range(0,1000) - (12 * (breed+baseBreed) * breedScale);
 
         
         if (chance < 10) {
@@ -186,7 +186,7 @@ public class Carnivore : Critter
             //     critterManager.GetComponent<CritterManager>().EvolveFromCritter(gameObject);
             // }
             energy -= energy/2;
-            CritterManager.SharedInstance.CritterBirth(speed, sense, breed, speciesNum, color, gameObject, energy);
+            CritterManager.SharedInstance.CritterBirth(speed, sense, breed, speciesNum, gameObject.GetComponent<InformationDisplay>().color, gameObject, energy);
             
         }
         

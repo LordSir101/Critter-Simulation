@@ -9,7 +9,10 @@ public class UIManager : MonoBehaviour
     public CritterManager critterManager;
     public EnvironmentManager environmentManager;
     public GameObject speciesCountUI;
+    
     public TextMeshProUGUI dayDisplay;
+
+    public int day;
     private Transform[] countElements = new Transform [10];
 
     // Start is called before the first frame update
@@ -26,6 +29,29 @@ public class UIManager : MonoBehaviour
 
     // Update is called once per frame
     void LateUpdate()
+    {
+        
+        UpdateSpeciesCountUI();
+        displayInfo();
+        
+    }
+
+    public void ToggleSpeciesCount()
+    {
+        speciesCountUI.SetActive(!speciesCountUI.activeInHierarchy);
+    }
+
+    public void setDay(int newDay)
+    {
+        day = newDay;
+    }
+
+    public void displayInfo()
+    {
+        dayDisplay.text = "Day: " + day;
+    }
+
+    public void UpdateSpeciesCountUI()
     {
         // update species counter
          if(speciesCountUI.GetComponent<VerticalLayoutGroup>().enabled)
@@ -61,13 +87,5 @@ public class UIManager : MonoBehaviour
                 text.enabled = false;
             }
         }
-
-        dayDisplay.text = "Day: " + environmentManager.day;
-        
-    }
-
-    public void ToggleSpeciesCount()
-    {
-        speciesCountUI.SetActive(!speciesCountUI.activeInHierarchy);
     }
 }

@@ -270,6 +270,7 @@ PrefabInstance:
       objectReference: {fileID: 21300000, guid: 17104bea3c3c3b7419c74e24b27e3c3c, type: 3}
     m_RemovedComponents:
     - {fileID: 4925447731397456153, guid: 9813249f57f339146ae4b794a6b77ffa, type: 3}
+    - {fileID: -836954159840378560, guid: 9813249f57f339146ae4b794a6b77ffa, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 315517041730028625, guid: 9813249f57f339146ae4b794a6b77ffa, type: 3}
@@ -282,6 +283,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5518243852280684052, guid: 9813249f57f339146ae4b794a6b77ffa, type: 3}
       insertIndex: -1
       addedObject: {fileID: -2132510024747676630}
+    - targetCorrespondingSourceObject: {fileID: 5518243852280684052, guid: 9813249f57f339146ae4b794a6b77ffa, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -8542972430773533326}
   m_SourcePrefab: {fileID: 100100000, guid: 9813249f57f339146ae4b794a6b77ffa, type: 3}
 --- !u!4 &2543648544944622446 stripped
 Transform:
@@ -310,10 +314,22 @@ MonoBehaviour:
   breed: 0
   size: 0
   speciesNum: 0
-  color: {r: 1, g: 1, b: 1, a: 1}
+  senseScale: 4
   energy: 60
-  movementTarget: {fileID: 7948002133433096677, guid: b8e5931ef150fa5479e18764bf7de14e, type: 3}
+  goToMovmentTarget: 1
+--- !u!114 &-8542972430773533326
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7762119193437655339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db05d2386a0896b44a43541a7b7eb87d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   timeOfCollsion: 0
   inCollisionState: 0
   surprisedEyes: {fileID: 21300000, guid: b1c72e74f5b569e45817c42f6ef02737, type: 3}
-  normalEyes: {fileID: 21300000, guid: 3279b99545a0f344e9358ad71f0894a8, type: 3}
+  normalEyes: {fileID: 21300000, guid: 17104bea3c3c3b7419c74e24b27e3c3c, type: 3}
