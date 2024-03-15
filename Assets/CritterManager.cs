@@ -27,6 +27,7 @@ public class CritterManager : MonoBehaviour
     //Critter pool
     private int amountToPool = 100;
     public static CritterManager SharedInstance;
+    //private List<GameObject> activeCritters;
 
 
     public Dictionary<int, int> speciesCount = new Dictionary<int, int>(){
@@ -55,8 +56,6 @@ public class CritterManager : MonoBehaviour
     }
     void Start()
     {
-        
-
         GameObject tmp;
         foreach(KeyValuePair<int, List<GameObject>> entry in critterPoolPool)
         {
@@ -69,7 +68,7 @@ public class CritterManager : MonoBehaviour
         }
 
         // Create the player made critters
-        mapSize = GameObject.FindAnyObjectByType<EnvironmentManager>().GetComponent<EnvironmentManager>().mapSize;
+        mapSize = EnvironmentManager.SharedInstance.mapSize;
         buffer = 5;
         width = (int)mapSize[0] / 2;
         height = (int)mapSize[1] / 2;
@@ -103,6 +102,20 @@ public class CritterManager : MonoBehaviour
             }
         }
         return null;
+    }
+    public List<GameObject> GetAllPooledCritters(int speciesNum)
+    {
+        // List<GameObject> pooledCritters = critterPoolPool[speciesNum];
+        // // if(activeCritters == null) {activeCritters = new List<GameObject>();}
+        // // activeCritters.Clear();
+        // for(int i = 0; i < amountToPool; i++)
+        // {
+        //     if(pooledCritters[i].activeInHierarchy)
+        //     {
+        //         activeCritters.ApooledCritters[i];
+        //     }
+        // }
+        return critterPoolPool[speciesNum];
     }
 
     (int,int,int) GenerateRandomCritter()
@@ -143,7 +156,7 @@ public class CritterManager : MonoBehaviour
             critter.GetComponent<Critter>().sense = sense;
             critter.GetComponent<Critter>().breed = breed;
             critter.GetComponent<Critter>().speciesNum = speciesNum;
-            critter.GetComponent<Critter>().color = color;
+            critter.GetComponent<InformationDisplay>().color = color;
             critter.GetComponent<Critter>().energy = energyToSpawnWith;
             critterBuilder.CreateCritter(speed, sense, breed, critter);
 
@@ -222,7 +235,7 @@ public class CritterManager : MonoBehaviour
         int newSense = stats[1];
         int newBreed = stats[2];    
 
-        Color32 newColor = modifyColor(critter.color);
+        Color32 newColor = modifyColor(critterToEvolveFrom.GetComponent<InformationDisplay>().color);
 
         speciesCount.Add(newSpeciesNum, 0);
         colors.Add(newSpeciesNum, newColor);

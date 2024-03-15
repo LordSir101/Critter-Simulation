@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73bf5a0e85d0cbd4aa548d880d178153, type: 3}
   m_Name: Breed
   m_EditorClassIdentifier: 
-  upgradeType: 0
+  icon: {fileID: 21300000, guid: ec6b684b280359b4d885845088c1a5e1, type: 3}
   upgradeName: BreedInc
-  icon: {fileID: 0}
+  upgradeType: 0
+  statToUpgrade: 2
+  upgradeValue: 1
   description: Upgrade breed stat

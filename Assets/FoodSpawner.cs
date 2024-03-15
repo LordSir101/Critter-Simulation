@@ -52,7 +52,7 @@ public class FoodSpawner : MonoBehaviour
             pooledMovementTargets.Add(tmp);
         }
 
-        mapSize = GameObject.FindAnyObjectByType<EnvironmentManager>().GetComponent<EnvironmentManager>().mapSize;
+        mapSize = EnvironmentManager.SharedInstance.mapSize;
         SpawnFood();
     }
 
