@@ -28,7 +28,7 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - icon
   - 
   - 
   - 
@@ -63,4 +63,7 @@ TagManager:
     locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: UIPreview
+    uniqueID: 2358280359
     locked: 0

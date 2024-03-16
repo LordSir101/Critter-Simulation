@@ -36,6 +36,7 @@ public class EnvironmentManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // upgrades happen after every carnivore wave
         upgradeInterval = carnivoreSpawnInterval;
         firstUpgrade = firstWave + 1;
 
@@ -79,13 +80,12 @@ public class EnvironmentManager : MonoBehaviour
     
     void StartUpgrade()
     {
-        // if(day % upgradeInterval == firstUpgrade)
-        // {
-        //     PauseControl.PauseGame();
-        //     uiManager.GetComponent<UIManager>().ShowUpgradeMenu();
-        // }
+        if(day % upgradeInterval == firstUpgrade)
+        {
+            gameObject.GetComponent<UpgradeManager>().Upgrade(uiManager.GetComponent<UpgradePanelManager>());
+        }
         
-        gameObject.GetComponent<UpgradeManager>().Upgrade(uiManager.GetComponent<UpgradePanelManager>());
+        //gameObject.GetComponent<UpgradeManager>().Upgrade(uiManager.GetComponent<UpgradePanelManager>());
         
     }
 
