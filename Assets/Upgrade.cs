@@ -27,6 +27,7 @@ public class Upgrade : ScriptableObject
     public UpgradeType upgradeType;
     public StatToUpgrade statToUpgrade;
     public float upgradeValue;
+    public int cost = 0;
 
     public String description;
 

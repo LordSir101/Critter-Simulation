@@ -8,9 +8,10 @@ using UnityEngine.Tilemaps;
 
 public class CritterManager : MonoBehaviour
 {
-    public critterBuilder critterBuilder;
+    public CritterBuilder critterBuilder;
     [SerializeField] private GameObject critterTemplate;
     [SerializeField] private GameObject carnivoreTemplate;
+    [SerializeField] private UIManager uIManager;
 
     private int numInitialSpecies = 4;
     private int numSpeciesExisted = 4;
@@ -103,6 +104,13 @@ public class CritterManager : MonoBehaviour
         }
         return null;
     }
+
+    public (int,int,int) GetPooledCritterStats(int speciesNum)
+    {
+        Critter critter = critterPoolPool[speciesNum][0].GetComponent<Critter>();
+        return (critter.speed, critter.sense, critter.breed);
+    }
+
     public List<GameObject> GetAllPooledCritters(int speciesNum)
     {
         // List<GameObject> pooledCritters = critterPoolPool[speciesNum];
@@ -158,7 +166,7 @@ public class CritterManager : MonoBehaviour
             critter.GetComponent<Critter>().speciesNum = speciesNum;
             critter.GetComponent<InformationDisplay>().color = color;
             critter.GetComponent<Critter>().energy = energyToSpawnWith;
-            critterBuilder.CreateCritter(speed, sense, breed, critter);
+            critterBuilder.CreateCritterSprite(speed, sense, breed, critter);
 
             speciesCount[speciesNum]++;
         }
@@ -174,6 +182,8 @@ public class CritterManager : MonoBehaviour
             {
                 speciesCount.Remove(critter.GetComponent<Critter>().speciesNum);
                 critterPoolPool.Remove(critter.GetComponent<Critter>().speciesNum);
+                // Update the species count UI to reflect that a species is dead
+                uIManager.BuildCritterCountUI();
             }
             critter.SetActive(false);
 
@@ -186,7 +196,9 @@ public class CritterManager : MonoBehaviour
         int newSpeciesNum = numSpeciesExisted;
         speciesCount.Add(newSpeciesNum, 0);
         colors.Add(newSpeciesNum, Color.white);
+
         critterPoolPool.Add(newSpeciesNum, new List<GameObject>());
+
         GameObject tmp;
         for(int i = 0; i < amountToPool; i++)
         {
@@ -194,9 +206,12 @@ public class CritterManager : MonoBehaviour
             tmp.SetActive(false);
             critterPoolPool[newSpeciesNum].Add(tmp);
         }
+
         for(int i = 0; i < numToSpawn; i++){
             CritterBirth(speed, sense, breed, newSpeciesNum, Color.white, carnivoreTemplate, energyToSpawnWith);
         }
+
+        uIManager.BuildCritterCountUI();
     }
 
     public void EvolveFromCritter(GameObject critterToEvolveFrom)
@@ -240,6 +255,7 @@ public class CritterManager : MonoBehaviour
         speciesCount.Add(newSpeciesNum, 0);
         colors.Add(newSpeciesNum, newColor);
         critterPoolPool.Add(newSpeciesNum, new List<GameObject>());
+
         GameObject tmp;
         for(int i = 0; i < amountToPool; i++)
         {
@@ -247,7 +263,6 @@ public class CritterManager : MonoBehaviour
             tmp.SetActive(false);
             critterPoolPool[newSpeciesNum].Add(tmp);
         }
-        
 
         //Debug.Log(newColor);
 
@@ -255,6 +270,9 @@ public class CritterManager : MonoBehaviour
         {
             CritterBirth(newSpeed, newSense, newBreed, newSpeciesNum, newColor, critterTemplate, critter.energy /2);
         }
+
+        // update ui to include new species
+        uIManager.BuildCritterCountUI();
         
     }
 
