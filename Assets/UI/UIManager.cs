@@ -9,9 +9,11 @@ public class UIManager : MonoBehaviour
     public CritterManager critterManager;
     [SerializeField] CritterBuilder critterBuilder;
     public EnvironmentManager environmentManager;
+
     public GameObject speciesCountUI;
     
-    public TextMeshProUGUI dayDisplay;
+    [SerializeField] private TextMeshProUGUI dayDisplay;
+    [SerializeField] private TextMeshProUGUI knowledgeDisplay;
 
     [SerializeField] private GameObject preview;
 
@@ -67,6 +69,7 @@ public class UIManager : MonoBehaviour
     public void displayInfo()
     {
         dayDisplay.text = "Day: " + day;
+        knowledgeDisplay.text = CritterKnowledgePoints.SharedInstance.GetKnowledgeOfSpecies(PlayerGameInfo.currSpeciesNum).ToString();
     }
 
      public GameObject GetPooledPreview()

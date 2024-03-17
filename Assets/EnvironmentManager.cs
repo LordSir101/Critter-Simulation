@@ -80,7 +80,7 @@ public class EnvironmentManager : MonoBehaviour
     
     void StartUpgrade()
     {
-        if(day % upgradeInterval == firstUpgrade)
+        if((day - firstUpgrade) % upgradeInterval == 0)
         {
             gameObject.GetComponent<UpgradeManager>().Upgrade(uiManager.GetComponent<UpgradePanelManager>());
         }
@@ -91,7 +91,7 @@ public class EnvironmentManager : MonoBehaviour
 
     void SpawnCarnivores()
     {
-        if(day % carnivoreSpawnInterval == firstWave)
+        if((day - firstWave) % carnivoreSpawnInterval == 0)
         {
             int numCarnivoreWaves = (day - firstWave) / carnivoreSpawnInterval + 1;
             int numCarnivoresToSpawn = 6 + numCarnivoreWaves / 2;

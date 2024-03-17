@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: -7734569854380664228}
   - component: {fileID: -836954159840378560}
   - component: {fileID: -3356918896600753349}
+  - component: {fileID: -8367566734348249495}
   m_Layer: 0
   m_Name: Critter
   m_TagString: Critter
@@ -228,11 +229,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 0
+  baseSpeed: 1
   sense: 0
+  baseSense: 3
+  senseScale: 4
   breed: 0
+  baseBreed: 1
   size: 0
   speciesNum: 0
-  senseScale: 4
   energy: 80
   goToMovmentTarget: 1
 --- !u!114 &-7734569854380664228
@@ -343,6 +347,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   color: {r: 0, g: 0, b: 0, a: 1}
+--- !u!114 &-8367566734348249495
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5518243852280684052}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc6ddce5452aae4449ce282225fa18ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &7085361636936322520
 PrefabInstance:
   m_ObjectHideFlags: 0

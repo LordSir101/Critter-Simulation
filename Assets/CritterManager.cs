@@ -182,6 +182,7 @@ public class CritterManager : MonoBehaviour
             {
                 speciesCount.Remove(critter.GetComponent<Critter>().speciesNum);
                 critterPoolPool.Remove(critter.GetComponent<Critter>().speciesNum);
+                CritterKnowledgePoints.SharedInstance.RemoveSpecies(critter.GetComponent<Critter>().speciesNum);
                 // Update the species count UI to reflect that a species is dead
                 uIManager.BuildCritterCountUI();
             }
