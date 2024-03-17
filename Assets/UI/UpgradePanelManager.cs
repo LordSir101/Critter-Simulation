@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,12 +8,25 @@ public class UpgradePanelManager : MonoBehaviour
 {
     [SerializeField] private GameObject upgradeMenu;
     [SerializeField] private List<UpgradeButton> buttons;
+    [SerializeField] private TextMeshProUGUI warning;
     
     // Start is called before the first frame update
 
     public void Upgrade(int pressedButtonId)
     {
-        EnvironmentManager.SharedInstance.gameObject.GetComponent<UpgradeManager>().ApplyUpgrade(pressedButtonId);
+        if(EnvironmentManager.SharedInstance.gameObject.GetComponent<UpgradeManager>().ApplyUpgrade(pressedButtonId))
+        {
+            CloseUpgradeMenu();
+        }
+        else
+        {
+            warning.enabled = true;
+        }
+        
+    }
+
+    public void NoUpgrade()
+    {
         CloseUpgradeMenu();
     }
 

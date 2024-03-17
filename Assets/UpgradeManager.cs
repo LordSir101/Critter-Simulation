@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class UpgradeManager : MonoBehaviour
@@ -25,25 +26,32 @@ public class UpgradeManager : MonoBehaviour
         upgradeUI.ShowUpgradeMenu(selectedUpgrades);
     }
 
-    public void ApplyUpgrade(int selectedButtonID)
+    public bool ApplyUpgrade(int selectedButtonID)
     {
         Upgrade selectedUpgrade = selectedUpgrades[selectedButtonID];
 
-        // if(speciesAquiredUpgrades == null) {speciesAquiredUpgrades = }
+        int knowledge = CritterKnowledgePoints.SharedInstance.GetKnowledgeOfSpecies(PlayerGameInfo.currSpeciesNum);
 
-        crittersToUpgrade = CritterManager.SharedInstance.GetAllPooledCritters(PlayerGameInfo.currSpeciesNum);
-        for(int i = 0; i < crittersToUpgrade.Count; i++)
+        if(selectedUpgrade.cost > knowledge)
         {
-            selectedUpgrade.Apply(crittersToUpgrade[i]);
+            return false;
         }
-        
-        speciesAquiredUpgrades[PlayerGameInfo.currSpeciesNum].Add(selectedUpgrade);
+        else
+        {
+            // if(speciesAquiredUpgrades == null) {speciesAquiredUpgrades = }
 
-        //TODO: remove upgrade from upgrade pool?
-        // upgradePool.Remove(selectedUpgrade)
+            crittersToUpgrade = CritterManager.SharedInstance.GetAllPooledCritters(PlayerGameInfo.currSpeciesNum);
+            for(int i = 0; i < crittersToUpgrade.Count; i++)
+            {
+                selectedUpgrade.Apply(crittersToUpgrade[i]);
+            }
+            
+            speciesAquiredUpgrades[PlayerGameInfo.currSpeciesNum].Add(selectedUpgrade);
 
-        //TODO: add random upgrades to other species
-        //TODO: update aquired upgrades list with updateAquiredUpgrades()
+            CritterKnowledgePoints.SharedInstance.UseKnowledgePoints(PlayerGameInfo.currSpeciesNum, selectedUpgrade.cost);
+
+            return true;
+        }
     }
 
     public List<Upgrade> GetSelectableUpgrades(int count)
@@ -61,7 +69,7 @@ public class UpgradeManager : MonoBehaviour
         return upgrades;
     }
 
-    private void UpdateAquiredUpgrades()
+    private void UpdateAquiredUpgradesTable()
     {
         // track upgrades for any new species that have been created
         foreach(KeyValuePair<int, int> entry in CritterManager.SharedInstance.speciesCount)
