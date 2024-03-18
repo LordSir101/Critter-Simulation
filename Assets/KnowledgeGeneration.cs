@@ -28,7 +28,7 @@ public class KnowledgeGeneration : MonoBehaviour
     void GenerateKnowledge(int rate)
     {
         int speciesNum = gameObject.GetComponent<Critter>().speciesNum;
-        CritterKnowledgePoints.SharedInstance.AddKnowledgePoints(speciesNum, rate);
+        SpeciesKnowledgePoints.SharedInstance.AddKnowledgePoints(speciesNum, rate);
 
         if(rate < maxKnowledgeGainrate)
         {
