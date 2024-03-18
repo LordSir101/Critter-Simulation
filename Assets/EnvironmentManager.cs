@@ -23,7 +23,6 @@ public class EnvironmentManager : MonoBehaviour
 
     private bool firstWaveSpawned = false;
 
-    //[SerializeField] private GameObject critterManager;
     [SerializeField] private GameObject uiManager;
 
     public static EnvironmentManager SharedInstance;
@@ -42,10 +41,7 @@ public class EnvironmentManager : MonoBehaviour
 
         mapSize = GameObject.FindGameObjectWithTag("PlayableArea").GetComponent<Tilemap>().size;
 
-        visionToggle = GameObject.FindGameObjectWithTag("VisionToggle").GetComponent<Button>();
-        visionToggle.onClick.AddListener(ToggleShowLines);
-
-        uiManager.GetComponent<UIManager>().setDay(day);
+        uiManager.GetComponent<UIManager>().SetDay(day);
 
         timeElapsed = Time.time;
         
@@ -65,14 +61,14 @@ public class EnvironmentManager : MonoBehaviour
             day++;
             timeElapsed = Time.time;
 
-            uiManager.GetComponent<UIManager>().setDay(day);
+            uiManager.GetComponent<UIManager>().SetDay(day);
 
             SpawnCarnivores();
             StartUpgrade();
         
         }
     }
-    void ToggleShowLines()
+    public void ToggleShowLines()
     {
         showLines = !showLines;
     }
@@ -91,6 +87,7 @@ public class EnvironmentManager : MonoBehaviour
 
     void SpawnCarnivores()
     {
+        // Carnivore waves and size get progressively larger as the days go by
         if((day - firstWave) % carnivoreSpawnInterval == 0)
         {
             int numCarnivoreWaves = (day - firstWave) / carnivoreSpawnInterval + 1;

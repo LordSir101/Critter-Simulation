@@ -9,14 +9,15 @@ public class Carnivore : Critter
     private float eatSpeed = 0.5f;
     private float timeStartedEating;
 
+    private int attackRange = 1;
+
     private Critter prey;
 
     private int energyTaken = 0;
     // Start is called before the first frame update
     void Start()
     {
-        gameObject.GetComponent<BoxCollider2D>().size += new Vector2(1,1);
-        //prey = CritterManager.SharedInstance.critterPoolPool
+        gameObject.GetComponent<BoxCollider2D>().size += new Vector2(attackRange, attackRange); // make it so that the carnivore can catch critters from a small distance away
         Setup();
         UseEnergy();
         ScanForFood();
@@ -25,16 +26,10 @@ public class Carnivore : Critter
     // Update is called once per frame
     void Update()
     {
-        //if(dead){return;}
-        // /&& Time.time - timeOfLastScan >= 0.5f
         if(!isEating )
         {
             ScanForFood();
         }
-        // if(lineRenderer.enabled){
-        //     DrawVision();
-        // }
-        
 
         if(Time.time - timeOfLastEnergyConsumption >= energyUsageInterval){
             AttemptBreed();
@@ -46,7 +41,6 @@ public class Carnivore : Critter
             timeStartedEating = Time.time;
             EatPrey();
         }
-        
     }
 
     void FixedUpdate()
@@ -87,7 +81,7 @@ public class Carnivore : Critter
                     mostEfficient = effciency;
                     targetFoodPos = new Vector3(xCoord,yCoord,0);
                     targetFood = collider.transform.gameObject;
-                    foundFood = true;
+                    //foundFood = true;
                     goToMovmentTarget = false;
                 }
                 
@@ -97,7 +91,7 @@ public class Carnivore : Critter
          if(foodFound == 0 && (!targetFood.activeInHierarchy || !goToMovmentTarget)){
             targetFood = FoodSpawner.SharedInstance.getMovementTarget(gameObject, transform.position);
             targetFoodPos = targetFood.transform.position;
-            foundFood = false;
+            //foundFood = false;
             goToMovmentTarget = true;
         }
         
@@ -157,6 +151,7 @@ public class Carnivore : Critter
             {
                 CritterManager.SharedInstance.CritterDeath(gameObject);
             }
+
             if(prey.energy <= 0)
             {
                 if(prey.gameObject.activeInHierarchy) //in case two carnivores attack the same target
@@ -175,21 +170,13 @@ public class Carnivore : Critter
     }
     private void AttemptBreed()
     {
-        //each point in breed gives approx 1% extra chance to breed
-        float chance = UnityEngine.Random.Range(0,1000) - (12 * (breed+baseBreed) * breedScale);
-
+        float chance = UnityEngine.Random.Range(0,100) - (breed+baseBreed) * breedScale;
         
-        if (chance < 10) {
-            // int evolveChance = UnityEngine.Random.Range(0,100);
-            // if(evolveChance <= 1)
-            // {
-            //     critterManager.GetComponent<CritterManager>().EvolveFromCritter(gameObject);
-            // }
+        // Carnivores do not evolve
+        if (chance < 1) {
             energy -= energy/2;
-            CritterManager.SharedInstance.CritterBirth(speed, sense, breed, speciesNum, gameObject.GetComponent<InformationDisplay>().color, gameObject, energy);
-            
+            CritterManager.SharedInstance.CritterBirth(speed, sense, breed, speciesNum, gameObject.GetComponent<CritterInformationDisplay>().color, gameObject, energy);
         }
-        
     }
 
     // private void UseEnergy()

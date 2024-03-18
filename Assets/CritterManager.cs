@@ -152,7 +152,7 @@ public class CritterManager : MonoBehaviour
             critter.GetComponent<Critter>().sense = sense;
             critter.GetComponent<Critter>().breed = breed;
             critter.GetComponent<Critter>().speciesNum = speciesNum;
-            critter.GetComponent<InformationDisplay>().color = color;
+            critter.GetComponent<CritterInformationDisplay>().color = color;
             critter.GetComponent<Critter>().energy = energyToSpawnWith;
             critterBuilder.CreateCritterSprite(speed, sense, breed, critter);
 
@@ -242,7 +242,7 @@ public class CritterManager : MonoBehaviour
         int newSense = stats[1];
         int newBreed = stats[2];    
 
-        Color32 newColor = ModifyColor(critterToEvolveFrom.GetComponent<InformationDisplay>().color);
+        Color32 newColor = ModifyColor(critterToEvolveFrom.GetComponent<CritterInformationDisplay>().color);
 
         speciesCount.Add(newSpeciesNum, 0);
         colors.Add(newSpeciesNum, newColor);

@@ -13,7 +13,7 @@ public class MovementTarget : MonoBehaviour
 
     void Update()
     {
-        // Movement target will destroy itself after 3 seconds no matter what in case it spawns out of bounds
+        // Movement target will destroy itself after 3 seconds no matter what in case it spawns out of bounds or critter finds new target
         if(Time.time - timeSpawned >= timeToExist)
         {
             critter.GetComponent<Critter>().goToMovmentTarget = false;

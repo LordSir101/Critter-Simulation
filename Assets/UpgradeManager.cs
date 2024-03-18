@@ -9,15 +9,14 @@ public class UpgradeManager : MonoBehaviour
     private List<Upgrade> selectedUpgrades;
     private List<GameObject> crittersToUpgrade;
 
-    //TODO: unserialize field when done debugging
-    [SerializeField] Dictionary<int, List<Upgrade>> speciesAquiredUpgrades = new Dictionary<int, List<Upgrade>>(){
+    Dictionary<int, List<Upgrade>> speciesAquiredUpgrades = new Dictionary<int, List<Upgrade>>(){
             {0, new List<Upgrade>()}, 
             {1, new List<Upgrade>()}, 
             {2, new List<Upgrade>()}, 
             {3, new List<Upgrade>()} 
         };
-    //[SerializeField] public List<Upgrade> aquiredUpgrades;
 
+    // Start upgrade process
     public void Upgrade(UpgradePanelManager upgradeUI)
     {
         if(selectedUpgrades == null) {selectedUpgrades = new List<Upgrade>();}
@@ -26,6 +25,7 @@ public class UpgradeManager : MonoBehaviour
         upgradeUI.ShowUpgradeMenu(selectedUpgrades);
     }
 
+    //TODO: make this function abel to apply upgrades to any species
     public bool ApplyUpgrade(int selectedButtonID)
     {
         Upgrade selectedUpgrade = selectedUpgrades[selectedButtonID];
@@ -38,8 +38,7 @@ public class UpgradeManager : MonoBehaviour
         }
         else
         {
-            // if(speciesAquiredUpgrades == null) {speciesAquiredUpgrades = }
-
+            // Apply upgrade to all critters in the pool
             crittersToUpgrade = CritterManager.SharedInstance.GetAllPooledCritters(PlayerGameInfo.currSpeciesNum);
             for(int i = 0; i < crittersToUpgrade.Count; i++)
             {

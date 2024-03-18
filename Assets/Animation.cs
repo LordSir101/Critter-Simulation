@@ -10,9 +10,7 @@ public class Animation : MonoBehaviour
     // Animation
     [SerializeField] private Sprite surprisedEyes;
     [SerializeField] private Sprite normalEyes;
-    // Start is called before the first frame update
-    
-    // Update is called once per frame
+
     void Update()
     {
          if(Time.time - timeOfCollsion >= 1 && inCollisionState){

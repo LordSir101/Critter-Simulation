@@ -6,17 +6,15 @@ public class KnowledgeGeneration : MonoBehaviour
 {
     protected float knowledgeGainInterval = 8;
     protected float timeLastKnowledgeGained;
-    protected int knowledgeGainRate = 20;
-    protected int knowledgeGainRateIncrease = 2;
+    protected int knowledgeGainRate = 20; // knowledge per tick
+    protected int knowledgeGainRateIncrease = 2; // increase rate of knowledge per tick
     protected int maxKnowledgeGainrate = 100;
 
-    // Start is called before the first frame update
     void Start()
     {
         timeLastKnowledgeGained = Time.time;
     }
 
-    // Update is called once per frame
     void Update()
     {
         if(Time.time - timeLastKnowledgeGained >= knowledgeGainInterval)
