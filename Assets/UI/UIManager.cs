@@ -69,7 +69,7 @@ public class UIManager : MonoBehaviour
     public void displayInfo()
     {
         dayDisplay.text = "Day: " + day;
-        knowledgeDisplay.text = CritterKnowledgePoints.SharedInstance.GetKnowledgeOfSpecies(PlayerGameInfo.currSpeciesNum).ToString();
+        knowledgeDisplay.text = SpeciesKnowledgePoints.SharedInstance.GetKnowledgeOfSpecies(PlayerGameInfo.currSpeciesNum).ToString();
     }
 
      public GameObject GetPooledPreview()

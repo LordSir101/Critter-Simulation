@@ -30,7 +30,7 @@ public class UpgradeManager : MonoBehaviour
     {
         Upgrade selectedUpgrade = selectedUpgrades[selectedButtonID];
 
-        int knowledge = CritterKnowledgePoints.SharedInstance.GetKnowledgeOfSpecies(PlayerGameInfo.currSpeciesNum);
+        int knowledge = SpeciesKnowledgePoints.SharedInstance.GetKnowledgeOfSpecies(PlayerGameInfo.currSpeciesNum);
 
         if(selectedUpgrade.cost > knowledge)
         {
@@ -48,7 +48,7 @@ public class UpgradeManager : MonoBehaviour
             
             speciesAquiredUpgrades[PlayerGameInfo.currSpeciesNum].Add(selectedUpgrade);
 
-            CritterKnowledgePoints.SharedInstance.UseKnowledgePoints(PlayerGameInfo.currSpeciesNum, selectedUpgrade.cost);
+            SpeciesKnowledgePoints.SharedInstance.UseKnowledgePoints(PlayerGameInfo.currSpeciesNum, selectedUpgrade.cost);
 
             return true;
         }

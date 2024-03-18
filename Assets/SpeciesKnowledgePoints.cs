@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CritterKnowledgePoints : MonoBehaviour
+public class SpeciesKnowledgePoints : MonoBehaviour
 {
-    public static CritterKnowledgePoints SharedInstance;
+    public static SpeciesKnowledgePoints SharedInstance;
 
     public Dictionary<int, int> speciesKnowledge = new Dictionary<int, int>(){
             {0, 0}, 

@@ -115,12 +115,6 @@ public class Critter : MonoBehaviour
         if(foodFound == 0 && (!targetFood.activeInHierarchy || !goToMovmentTarget)){
             
             targetFood = FoodSpawner.SharedInstance.getMovementTarget(gameObject, transform.position);
-            //Vector3 mapSize = GameObject.FindAnyObjectByType<EnvironmentManager>().GetComponent<EnvironmentManager>().mapSize;
-            // int[] directions = {-1,1};
-            // float xCoord = UnityEngine.Random.Range(8,20) * directions[UnityEngine.Random.Range(0,2)];
-            // float yCoord = UnityEngine.Random.Range(8,20) * directions[UnityEngine.Random.Range(0,2)];
-            // Vector3 targetPos = transform.position + new Vector3(xCoord, yCoord,0);
-            //targetFood = Instantiate(movementTarget, targetPos, transform.rotation);
             targetFoodPos = targetFood.transform.position;
             foundFood = false;
             goToMovmentTarget = true;
@@ -157,13 +151,13 @@ public class Critter : MonoBehaviour
             CritterManager.SharedInstance.CritterDeath(gameObject);
         }
 
-        if(speciesNum == 0)
-        {
-            Debug.Log("-----------------------------------------------------");
-            Debug.Log("Speedscale: " + speedScale);
-            Debug.Log("Sensescale: " + senseScale);
-            Debug.Log("Breedscale: " + breedScale);
-        }
+        // if(speciesNum == 0)
+        // {
+        //     Debug.Log("-----------------------------------------------------");
+        //     Debug.Log("Speedscale: " + speedScale);
+        //     Debug.Log("Sensescale: " + senseScale);
+        //     Debug.Log("Breedscale: " + breedScale);
+        // }
         //
     }
 
@@ -182,9 +176,7 @@ public class Critter : MonoBehaviour
             }
             energy -= energy/2;
             CritterManager.SharedInstance.CritterBirth(speed, sense, breed, speciesNum, gameObject.GetComponent<InformationDisplay>().color, gameObject, energy);
-            
         }
-        
     }
     
     protected void Setup()

@@ -11,11 +11,6 @@ public class MovementTarget : MonoBehaviour
 
     public GameObject critter;
 
-    void Start()
-    {
-       
-    }
-
     void Update()
     {
         // Movement target will destroy itself after 3 seconds no matter what in case it spawns out of bounds

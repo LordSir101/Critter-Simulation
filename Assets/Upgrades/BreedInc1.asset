@@ -17,5 +17,5 @@ MonoBehaviour:
   upgradeType: 0
   statToUpgrade: 2
   upgradeValue: 1
-  cost: 50000
+  cost: 500
   description: Increases the effectiveness of the breed tiles for your critters

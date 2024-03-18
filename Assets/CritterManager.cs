@@ -28,7 +28,6 @@ public class CritterManager : MonoBehaviour
     //Critter pool
     private int amountToPool = 100;
     public static CritterManager SharedInstance;
-    //private List<GameObject> activeCritters;
 
 
     public Dictionary<int, int> speciesCount = new Dictionary<int, int>(){
@@ -74,16 +73,15 @@ public class CritterManager : MonoBehaviour
         width = (int)mapSize[0] / 2;
         height = (int)mapSize[1] / 2;
 
-        // for(int i = 0; i < numInitialSpecies; i++){
-        //     speciesCount.Add(0);
-        // }
         for(int i = 0; i < numInitialCrittersToSpawn; i++){
             CritterBirth(MenuInput.speed, MenuInput.sense, MenuInput.breed, 0, colors[0], critterTemplate);
         }
 
         // Generate random critters to populate the world
         for(int i = 1; i < numInitialSpecies; i++){
+
             (int speed, int sense, int breed) = GenerateRandomCritter();
+
             for(int j = 0; j < numInitialCrittersToSpawn; j++)
             {
                 CritterBirth(speed, sense, breed, i, colors[i], critterTemplate);
@@ -113,16 +111,6 @@ public class CritterManager : MonoBehaviour
 
     public List<GameObject> GetAllPooledCritters(int speciesNum)
     {
-        // List<GameObject> pooledCritters = critterPoolPool[speciesNum];
-        // // if(activeCritters == null) {activeCritters = new List<GameObject>();}
-        // // activeCritters.Clear();
-        // for(int i = 0; i < amountToPool; i++)
-        // {
-        //     if(pooledCritters[i].activeInHierarchy)
-        //     {
-        //         activeCritters.ApooledCritters[i];
-        //     }
-        // }
         return critterPoolPool[speciesNum];
     }
 
@@ -178,14 +166,17 @@ public class CritterManager : MonoBehaviour
         if(critter.activeInHierarchy)
         {
             speciesCount[critter.GetComponent<Critter>().speciesNum]--;
+
+            // If the species is extinct, remove it from tables
             if(speciesCount[critter.GetComponent<Critter>().speciesNum] == 0)
             {
                 speciesCount.Remove(critter.GetComponent<Critter>().speciesNum);
                 critterPoolPool.Remove(critter.GetComponent<Critter>().speciesNum);
-                CritterKnowledgePoints.SharedInstance.RemoveSpecies(critter.GetComponent<Critter>().speciesNum);
+                SpeciesKnowledgePoints.SharedInstance.RemoveSpecies(critter.GetComponent<Critter>().speciesNum);
                 // Update the species count UI to reflect that a species is dead
                 uIManager.BuildCritterCountUI();
             }
+
             critter.SetActive(false);
 
         }       
@@ -251,7 +242,7 @@ public class CritterManager : MonoBehaviour
         int newSense = stats[1];
         int newBreed = stats[2];    
 
-        Color32 newColor = modifyColor(critterToEvolveFrom.GetComponent<InformationDisplay>().color);
+        Color32 newColor = ModifyColor(critterToEvolveFrom.GetComponent<InformationDisplay>().color);
 
         speciesCount.Add(newSpeciesNum, 0);
         colors.Add(newSpeciesNum, newColor);
@@ -277,7 +268,7 @@ public class CritterManager : MonoBehaviour
         
     }
 
-    Color32 modifyColor(Color32 color)
+    Color32 ModifyColor(Color32 color)
     {
         Color32 oldColor = color;
         int[] oldColorComponents = {oldColor.r, oldColor.g, oldColor.b};
