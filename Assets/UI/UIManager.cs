@@ -15,7 +15,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI dayDisplay;
     [SerializeField] private TextMeshProUGUI knowledgeDisplay;
 
-    [SerializeField] private GameObject preview;
+    [SerializeField] private GameObject preview; // prefab of Images in the shape of critters
 
     public int day;
     [SerializeField] private Transform[] countElements = new Transform [10];
@@ -48,7 +48,7 @@ public class UIManager : MonoBehaviour
     {
         
         UpdateSpeciesCountUI();
-        displayInfo();
+        DisplayInfo();
         
     }
 
@@ -61,12 +61,12 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void setDay(int newDay)
+    public void SetDay(int newDay)
     {
         day = newDay;
     }
 
-    public void displayInfo()
+    public void DisplayInfo()
     {
         dayDisplay.text = "Day: " + day;
         knowledgeDisplay.text = SpeciesKnowledgePoints.SharedInstance.GetKnowledgeOfSpecies(PlayerGameInfo.currSpeciesNum).ToString();
@@ -74,7 +74,6 @@ public class UIManager : MonoBehaviour
 
      public GameObject GetPooledPreview()
     {
-        //List<GameObject> pooledPreview = previewPool[speciesNum];
         for(int i = 0; i < amountToPool; i++)
         {
             if(!previewPool[i].activeInHierarchy)
@@ -92,6 +91,7 @@ public class UIManager : MonoBehaviour
             int elementNum = 1;
             foreach(KeyValuePair<int, int> entry in CritterManager.SharedInstance.speciesCount)
             {
+                // loop backward so that the first species appears at bottom of UI
                 GameObject box = countElements[countElements.Length - elementNum].gameObject;
                 Image background = box.GetComponent<Image>();
 
@@ -109,6 +109,7 @@ public class UIManager : MonoBehaviour
 
             }
 
+            // Hide the unused boxes
             for(int i = 0; i < countElements.Length - elementNum + 1; i++)
             {
                 countElements[i].gameObject.SetActive(false);

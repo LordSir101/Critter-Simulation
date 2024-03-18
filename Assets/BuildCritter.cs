@@ -19,19 +19,6 @@ public class CritterBuilder : MonoBehaviour
     // Set the sprites and hitboxes for the critter based on its stats
     public void CreateCritterSprite(int speed, int sense, int breed, GameObject template)
     {
-
-        // The components that hold the part sprites of the critter are in the child object
-        //Transform[] transform = template.transform.GetChild(0).gameObject.GetComponentsInChildren<Transform>();
-        //Transform[] transform = {};
-
-        // foreach(Transform component in template.transform)
-        // {
-        //     if (component.tag == "BodyParts")
-        //     {
-        //         transform = template.transform.GetChild(0).gameObject.GetComponentsInChildren<Transform>();
-        //     }
-        // }
-        // get all child components of the critter template that have the part tag
         List<GameObject> partSections = new();
         foreach(Transform part in template.GetComponentsInChildren<Transform>()){
             if (part.tag == "Part")
@@ -111,6 +98,7 @@ public class CritterBuilder : MonoBehaviour
         
     }
 
+    // Creates an image of critter. Used for icons in the UI that do not have hitboxes and use Image instead of SpriteRenderer
     public void CreateCritterIcon(int speed, int sense, int breed, GameObject template)
     {
         List<GameObject> partSections = new();

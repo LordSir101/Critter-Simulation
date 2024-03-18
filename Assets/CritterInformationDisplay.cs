@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
-public class InformationDisplay : MonoBehaviour
+public class CritterInformationDisplay : MonoBehaviour
 {
     protected LineRenderer lineRenderer;
     protected Button visionToggle;
@@ -23,7 +23,6 @@ public class InformationDisplay : MonoBehaviour
         if(lineRenderer.enabled){
             DrawVision();
         }
-        
     }
 
     public void ToggleLineRenderer()
@@ -41,7 +40,7 @@ public class InformationDisplay : MonoBehaviour
         // draw a circle based on radius and subdivision
         // the line renderer is attatched to the critter and the circle will automatically move with it
         int subdivisions = 15;
-        float radius = (sense+3)*senseScale;
+        float radius = (sense+baseSense)*senseScale;
 
         float angleStop = 2f * Mathf.PI / subdivisions;
         lineRenderer.positionCount = subdivisions;

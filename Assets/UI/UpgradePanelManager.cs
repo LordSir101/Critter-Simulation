@@ -9,8 +9,6 @@ public class UpgradePanelManager : MonoBehaviour
     [SerializeField] private GameObject upgradeMenu;
     [SerializeField] private List<UpgradeButton> buttons;
     [SerializeField] private TextMeshProUGUI warning;
-    
-    // Start is called before the first frame update
 
     public void Upgrade(int pressedButtonId)
     {

@@ -11,6 +11,7 @@ public class FoodSpawner : MonoBehaviour
     private float spawnInterval = 10;
 
     private int numFoodToSpawn = 80;
+    private int buffer = 3;
     public GameObject food;
     public GameObject movementTarget;
 
@@ -27,8 +28,8 @@ public class FoodSpawner : MonoBehaviour
     public static FoodSpawner SharedInstance;
     public List<GameObject> pooledFood;
     public List<GameObject> pooledMovementTargets;
-    //public GameObject objectToPool;
     public int amountToPool = 200;
+
     void Awake()
     {
         SharedInstance = this;
@@ -89,7 +90,6 @@ public class FoodSpawner : MonoBehaviour
 
     private void SpawnFood(){
         lastSpawnTime = Time.time;
-        int buffer = 3;
         int width = (int)mapSize[0] / 2;
         int height = (int)mapSize[1] / 2;
 
@@ -97,7 +97,6 @@ public class FoodSpawner : MonoBehaviour
             int xpos = UnityEngine.Random.Range(-width + buffer, width - buffer);
             int ypos = UnityEngine.Random.Range(-height + buffer, height - buffer);
 
-            //Food newFood = Instantiate(food, new Vector3(xpos,ypos,0), transform.rotation).GetComponent<Food>();
             GameObject newFood = SharedInstance.GetPooledFood(); 
             if (newFood != null) {
                 newFood.transform.position = new Vector3(xpos,ypos,0);
@@ -115,26 +114,20 @@ public class FoodSpawner : MonoBehaviour
 
     public GameObject getMovementTarget(GameObject critter, Vector3 critterPos)
     {
-        int buffer = 3;
-        int width = (int)mapSize[0] / 2;
-        int height = (int)mapSize[1] / 2;
-
-        // int xpos = UnityEngine.Random.Range(-width + buffer, width - buffer);
-        // int ypos = UnityEngine.Random.Range(-height + buffer, height - buffer);
-        // Vector3 dir = new Vector3(xpos,ypos,0) - critterPos;
-        // dir.Normalize();
-        // dir *= UnityEngine.Random.Range(15, 30);
-
-        // dir.x = dir.x > width - buffer ? width - buffer : dir.x;
-        // dir.x = dir.x < -width + buffer ? -width + buffer : dir.x;
-        // dir.y = dir.y > height - buffer ? height - buffer : dir.y;
-        // dir.y = dir.y < -height + buffer ? -height + buffer : dir.y;
-
         int[] directions = {-1,1};
         float xCoord = UnityEngine.Random.Range(8,20) * directions[UnityEngine.Random.Range(0,2)];
         float yCoord = UnityEngine.Random.Range(8,20) * directions[UnityEngine.Random.Range(0,2)];
-        Vector3 targetPos = critterPos + new Vector3(xCoord, yCoord,0);//dir;
-        //targetFood = Instantiate(movementTarget, targetPos, transform.rotation);
+
+        // movement target spawns at a point 8-20 units from where the critter is
+        Vector3 targetPos = critterPos + new Vector3(xCoord, yCoord,0);
+
+        // prevent target from spawning outside map
+        targetPos = new Vector3(
+            Mathf.Clamp(targetPos.x, (-mapSize.x / 2) + buffer, (mapSize.x / 2) - buffer),
+            Mathf.Clamp(targetPos.y, (-mapSize.y / 2) + buffer, (mapSize.y / 2) - buffer),
+            0
+        );
+
         GameObject movementTarget = SharedInstance.GetPooledMovementTarget(); 
         if (movementTarget != null) {
             movementTarget.transform.position = targetPos;

@@ -7,8 +7,32 @@ public class CameraController : MonoBehaviour
     private bool isDragging = false;
     private Vector3 pointOfClick;
     private Vector3 cameraOrigin;
-    //float buffer = 0.5f;
+    private Vector3 mapSize;
+    private Bounds cameraBounds;
+    private int buffer = 20;
+    private float cameraHeight;
+    private float cameraWidth;
  
+
+    void Start()
+    {
+        mapSize = EnvironmentManager.SharedInstance.mapSize;
+
+        cameraHeight = Camera.main.orthographicSize;
+        cameraWidth = cameraHeight * Camera.main.aspect;
+
+        float minX = -mapSize.x / 2 + cameraWidth;
+        float maxX = mapSize.x / 2 - cameraWidth;
+        float minY = -mapSize.y / 2 + cameraHeight;
+        float maxY = mapSize.y / 2- cameraHeight;
+
+        cameraBounds = new Bounds();
+        cameraBounds.SetMinMax(
+            new Vector3(minX - buffer, minY - buffer, 0),
+            new Vector3(maxX + buffer, maxY + buffer, 0)
+        );
+    }
+
     void Update()
     {
         if (Input.GetMouseButtonDown(0))
@@ -18,8 +42,8 @@ public class CameraController : MonoBehaviour
                 pointOfClick = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 return;
             }
-            
         }
+
         if(!Input.GetMouseButton(0))
         {
             isDragging = false;
@@ -28,54 +52,21 @@ public class CameraController : MonoBehaviour
 
         Vector3 distanceMoved = Camera.main.ScreenToWorldPoint(Input.mousePosition) - pointOfClick;
         Vector3 move = new Vector3(distanceMoved.x * -1, distanceMoved.y * -1, 0) + Camera.main.transform.position;
+
+        move = RestrictCameraToBounds(move);
+
         Camera.main.transform.position = move;
 
-        
     }
-    // void LateUpdate()
-    // {
-        // if (Input.GetMouseButtonDown(0))
-        // {
-        //     dragOrigin = Input.mousePosition;
-        //     return;
-        // }
- 
-        // if (!Input.GetMouseButton(0)) return;
- 
-        // Vector3 pos = Camera.main.ScreenToViewportPoint(Input.mousePosition - dragOrigin);
-        // Vector3 move = new Vector3(pos.x * dragSpeed * -1, pos.y * dragSpeed * -1, 0);
- 
-        // transform.Translate(move, Space.World);
 
-        // void LateUpdate () {
-        //     if (Input.GetMouseButton (0)) {
-        //         Diference=(Camera.main.ScreenToWorldPoint (Input.mousePosition))- Camera.main.transform.position;
-        //             if (Drag==false){
-        //             Drag=true;
-        //             Origin=Camera.main.ScreenToWorldPoint (Input.mousePosition);
-        //         }
-        //     } else {
-        //         Drag=false;
-        //     }
-        //     if (Drag==true){
-        //         Camera.main.transform.position = Origin-Diference;
-        //     }
-        // }
-
-
-        // if(!isDragging) return;
-        
-       
-
-        //     //Vector3 roundedToPixel = transform.position;
-
-        //     // roundedToPixel.x = (int)(roundedToPixel.x * PixelsPerUnit) / PixelsPerUnit;
-        //     // roundedToPixel.y = (int)(roundedToPixel.y * PixelsPerUnit) / PixelsPerUnit;
-        //     // roundedToPixel.z = (int)(roundedToPixel.z * PixelsPerUnit) / PixelsPerUnit;
-        
-        //     // camera.transform.position = roundedToPixel;
-        // }
-        //Vector3 difference = Camera.main.ScreenToWorldPoint(Input.mousePosition)- Camera.main.transform.position;
+    private Vector3 RestrictCameraToBounds(Vector3 pos)
+    {
+        return new Vector3(
+            Mathf.Clamp(pos.x, cameraBounds.min.x, cameraBounds.max.x),
+            Mathf.Clamp(pos.y, cameraBounds.min.y, cameraBounds.max.y),
+            transform.position.z
+        );
     }
+}
         
 

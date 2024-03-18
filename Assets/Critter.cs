@@ -31,7 +31,7 @@ public class Critter : MonoBehaviour
     // Food
     protected Vector3 targetFoodPos;
     protected GameObject targetFood;
-    protected bool foundFood = false;
+    //protected bool foundFood = false;
     public bool goToMovmentTarget = true;
     protected float timeOfLastScan;
 
@@ -104,7 +104,7 @@ public class Critter : MonoBehaviour
                     mostEfficient = effciency;
                     targetFoodPos = new Vector3(xCoord,yCoord,0);
                     targetFood = collider.transform.gameObject;
-                    foundFood = true;
+                    //foundFood = true;
                     goToMovmentTarget = false;
                 }
                 
@@ -116,7 +116,7 @@ public class Critter : MonoBehaviour
             
             targetFood = FoodSpawner.SharedInstance.getMovementTarget(gameObject, transform.position);
             targetFoodPos = targetFood.transform.position;
-            foundFood = false;
+            //foundFood = false;
             goToMovmentTarget = true;
         }
         
@@ -150,32 +150,21 @@ public class Critter : MonoBehaviour
         {
             CritterManager.SharedInstance.CritterDeath(gameObject);
         }
-
-        // if(speciesNum == 0)
-        // {
-        //     Debug.Log("-----------------------------------------------------");
-        //     Debug.Log("Speedscale: " + speedScale);
-        //     Debug.Log("Sensescale: " + senseScale);
-        //     Debug.Log("Breedscale: " + breedScale);
-        // }
-        //
     }
 
     private void AttemptBreed()
     {
-        //each point in breed gives approx 1% extra chance to breed
-        float chance = UnityEngine.Random.Range(0,1000) - (15 * (breed+baseBreed) * breedScale);
+        //each point in breed gives approx "breed scale" % extra chance to breed
+        float chance = UnityEngine.Random.Range(0,100) - ((breed+baseBreed) * breedScale);
 
-       
-        //TODO add a chance of evolving the species when a new one is born
-        if (chance < 10) {
+        if (chance < 1) {
             int evolveChance = UnityEngine.Random.Range(0,100);
             if(evolveChance <= 3)
             {
                 CritterManager.SharedInstance.EvolveFromCritter(gameObject);
             }
             energy -= energy/2;
-            CritterManager.SharedInstance.CritterBirth(speed, sense, breed, speciesNum, gameObject.GetComponent<InformationDisplay>().color, gameObject, energy);
+            CritterManager.SharedInstance.CritterBirth(speed, sense, breed, speciesNum, gameObject.GetComponent<CritterInformationDisplay>().color, gameObject, energy);
         }
     }
     
