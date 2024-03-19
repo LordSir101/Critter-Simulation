@@ -79,6 +79,7 @@ public class Critter : MonoBehaviour
 
     private void ScanForFood(){
         timeOfLastScan = Time.time;
+        
         // Find nearby food based on sense stat
         List<Collider2D> nearbyFood = new List<Collider2D>();
         Physics2D.OverlapCircle(new Vector2 (transform.position.x, transform.position.y), (sense+baseSense)*senseScale, new ContactFilter2D().NoFilter(), nearbyFood);
@@ -143,6 +144,7 @@ public class Critter : MonoBehaviour
 
     protected void UseEnergy()
     {
+        // energy cost is exponentially higher the bigger the critter is
         energy -=  (int) Math.Floor(Math.Pow(size, 1.5f) * 1.5 + 9-size);
         timeOfLastEnergyConsumption = Time.time;
 

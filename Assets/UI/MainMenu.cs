@@ -22,14 +22,6 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private GameObject critterTemplate;
 
     private GameObject preview;
-    //[SerializeField] private Image tank;
-
-    
-    public void Start()
-    {
-        // Instatiate a critter so the player can see a preview of what it will look like
-        //preview = Instantiate(critterTemplate, new Vector3(transform.position.x + 7.5f, transform.position.y, 0), transform.rotation);
-    }
 
     public void PlayGame()
     {
@@ -82,9 +74,6 @@ public class MainMenu : MonoBehaviour
 
     private void BuildPreview()
     {
-        // Instantiate a new preview every time since buildcritter may destroy some components
-        //Destroy(preview);
-        //preview = Instantiate(critterTemplate, new Vector3(transform.position.x + 7.5f, transform.position.y, 0), transform.rotation);
         critterBuilder.CreateCritterIcon(MenuInput.speed, MenuInput.sense, MenuInput.breed, critterTemplate);
     }
 

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SpeciesKnowledgePoints : MonoBehaviour
 {
-    public static SpeciesKnowledgePoints SharedInstance;
+    //public static SpeciesKnowledgePoints SharedInstance;
 
     public Dictionary<int, int> speciesKnowledge = new Dictionary<int, int>(){
             {0, 0}, 
@@ -12,11 +12,6 @@ public class SpeciesKnowledgePoints : MonoBehaviour
             {2, 0}, 
             {3, 0} 
         };
-
-    void Awake()
-    {
-        SharedInstance = this;
-    }
 
     public void AddKnowledgePoints(int speciesNum, int knowledgeGained)
     {

@@ -12,7 +12,7 @@ public class UpgradePanelManager : MonoBehaviour
 
     public void Upgrade(int pressedButtonId)
     {
-        if(EnvironmentManager.SharedInstance.gameObject.GetComponent<UpgradeManager>().ApplyUpgrade(pressedButtonId))
+        if(LogicManager.SharedInstance.gameObject.GetComponent<UpgradeManager>().ApplyUpgrade(pressedButtonId))
         {
             CloseUpgradeMenu();
         }

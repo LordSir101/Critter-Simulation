@@ -8,6 +8,7 @@ public class UpgradeManager : MonoBehaviour
     [SerializeField] List<Upgrade> upgradePool;
     private List<Upgrade> selectedUpgrades;
     private List<GameObject> crittersToUpgrade;
+    [SerializeField] private SpeciesKnowledgePoints speciesKnowledgePoints;
 
     Dictionary<int, List<Upgrade>> speciesAquiredUpgrades = new Dictionary<int, List<Upgrade>>(){
             {0, new List<Upgrade>()}, 
@@ -30,7 +31,7 @@ public class UpgradeManager : MonoBehaviour
     {
         Upgrade selectedUpgrade = selectedUpgrades[selectedButtonID];
 
-        int knowledge = SpeciesKnowledgePoints.SharedInstance.GetKnowledgeOfSpecies(PlayerGameInfo.currSpeciesNum);
+        int knowledge = speciesKnowledgePoints.GetKnowledgeOfSpecies(PlayerGameInfo.currSpeciesNum);
 
         if(selectedUpgrade.cost > knowledge)
         {
@@ -47,7 +48,7 @@ public class UpgradeManager : MonoBehaviour
             
             speciesAquiredUpgrades[PlayerGameInfo.currSpeciesNum].Add(selectedUpgrade);
 
-            SpeciesKnowledgePoints.SharedInstance.UseKnowledgePoints(PlayerGameInfo.currSpeciesNum, selectedUpgrade.cost);
+            speciesKnowledgePoints.UseKnowledgePoints(PlayerGameInfo.currSpeciesNum, selectedUpgrade.cost);
 
             return true;
         }

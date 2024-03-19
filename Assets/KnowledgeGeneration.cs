@@ -10,9 +10,12 @@ public class KnowledgeGeneration : MonoBehaviour
     protected int knowledgeGainRateIncrease = 2; // increase rate of knowledge per tick
     protected int maxKnowledgeGainrate = 100;
 
+    private SpeciesKnowledgePoints speciesKnowledgePoints;
+
     void Start()
     {
         timeLastKnowledgeGained = Time.time;
+        speciesKnowledgePoints = CritterManager.SharedInstance.GetComponent<SpeciesKnowledgePoints>();
     }
 
     void Update()
@@ -26,7 +29,7 @@ public class KnowledgeGeneration : MonoBehaviour
     void GenerateKnowledge(int rate)
     {
         int speciesNum = gameObject.GetComponent<Critter>().speciesNum;
-        SpeciesKnowledgePoints.SharedInstance.AddKnowledgePoints(speciesNum, rate);
+        speciesKnowledgePoints.AddKnowledgePoints(speciesNum, rate);
 
         if(rate < maxKnowledgeGainrate)
         {
