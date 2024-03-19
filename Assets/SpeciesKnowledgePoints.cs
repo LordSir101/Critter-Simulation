@@ -13,16 +13,6 @@ public class SpeciesKnowledgePoints : MonoBehaviour
             {3, 0} 
         };
 
-    // void Awake()
-    // {
-    //     SharedInstance = this;
-    // }
-
-    void Start()
-    {
-        Debug.Log(speciesKnowledge[0]);
-    }
-
     public void AddKnowledgePoints(int speciesNum, int knowledgeGained)
     {
         if(!speciesKnowledge.ContainsKey(speciesNum))
