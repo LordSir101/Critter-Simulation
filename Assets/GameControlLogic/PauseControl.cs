@@ -11,10 +11,12 @@ public class PauseControl : MonoBehaviour
         if(pause)
         {
             Time.timeScale = 0f;
+            gameIsPaused = true;
         }
         else 
         {
             Time.timeScale = 1;
+            gameIsPaused = false;
         }
     }
 }

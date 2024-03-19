@@ -2,10 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
 
-public class EnvironmentManager : MonoBehaviour
+public class LogicManager : MonoBehaviour
 {
     public Vector3 mapSize;
     private Button visionToggle;
@@ -24,8 +25,9 @@ public class EnvironmentManager : MonoBehaviour
     private bool firstWaveSpawned = false;
 
     [SerializeField] private GameObject uiManager;
+    [SerializeField] private GameEndPanelManager gameEndPanel;
 
-    public static EnvironmentManager SharedInstance;
+    public static LogicManager SharedInstance;
 
     void Awake()
     {
@@ -44,7 +46,8 @@ public class EnvironmentManager : MonoBehaviour
         uiManager.GetComponent<UIManager>().SetDay(day);
 
         timeElapsed = Time.time;
-        
+
+        PauseControl.PauseGame(false);
     }
 
     // Update is called once per frame
@@ -82,7 +85,6 @@ public class EnvironmentManager : MonoBehaviour
         }
         
         //gameObject.GetComponent<UpgradeManager>().Upgrade(uiManager.GetComponent<UpgradePanelManager>());
-        
     }
 
     void SpawnCarnivores()
@@ -93,28 +95,15 @@ public class EnvironmentManager : MonoBehaviour
             int numCarnivoreWaves = (day - firstWave) / carnivoreSpawnInterval + 1;
             int numCarnivoresToSpawn = 6 + numCarnivoreWaves / 2;
             int sizeOfCarnivore = 6 + numCarnivoreWaves / 2;
-
-
-            int speed = UnityEngine.Random.Range(1,sizeOfCarnivore -2);
-            int sense = UnityEngine.Random.Range(1,sizeOfCarnivore - speed);
-            int breed = UnityEngine.Random.Range(1,sizeOfCarnivore - speed - sense);
-            int currSize = speed + sense + breed;
-
-            // randomly add 1 stat until the size is at min size for the wave
-            while(currSize < sizeOfCarnivore)
-            {
-                int[]stats = {speed, sense, breed};
-                stats[UnityEngine.Random.Range(0,3)]++;
-                speed = stats[0];
-                sense = stats[1];
-                breed = stats[2];
-                currSize = speed + sense + breed;
-            }
-
             int energytoSpawnWith = 80 + 15*day;
 
-            CritterManager.SharedInstance.SpawnCarnivores(speed, sense, breed, energytoSpawnWith,numCarnivoresToSpawn);
+            CritterManager.SharedInstance.SpawnCarnivores(sizeOfCarnivore, energytoSpawnWith,numCarnivoresToSpawn);
         }
 
+    }
+
+    public void EndGame()
+    {
+        gameEndPanel.OpenPanel();
     }
 }

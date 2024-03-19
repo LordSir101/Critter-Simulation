@@ -16,7 +16,7 @@ public class CameraController : MonoBehaviour
 
     void Start()
     {
-        mapSize = EnvironmentManager.SharedInstance.mapSize;
+        mapSize = LogicManager.SharedInstance.mapSize;
 
         cameraHeight = Camera.main.orthographicSize;
         cameraWidth = cameraHeight * Camera.main.aspect;

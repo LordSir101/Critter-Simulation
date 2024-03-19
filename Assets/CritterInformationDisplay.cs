@@ -13,7 +13,7 @@ public class CritterInformationDisplay : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        setup();
+        Setup();
         
     }
 
@@ -56,26 +56,24 @@ public class CritterInformationDisplay : MonoBehaviour
         }
     }
 
-    protected void setup()
+    protected void Setup()
     {
         
         gameObject.GetComponent<Light2D>().color = color;
         
-        lineRenderer = gameObject.GetComponent<LineRenderer>();
         Gradient gradient = new Gradient();
         gradient.SetKeys(
-            new GradientColorKey[] { new GradientColorKey(color, 0.0f), new GradientColorKey(color, 1.0f) },
-            new GradientAlphaKey[] { new GradientAlphaKey(1.0f, 0.0f), new GradientAlphaKey(1.0f, 1.0f) }
+            new GradientColorKey[] { new(color, 0.0f), new(color, 1.0f) },
+            new GradientAlphaKey[] { new(1.0f, 0.0f), new(1.0f, 1.0f) }
         );
+
+        lineRenderer = gameObject.GetComponent<LineRenderer>();
         lineRenderer.colorGradient = gradient;
-        lineRenderer.enabled = EnvironmentManager.SharedInstance.showLines;
-        //critterManager = GameObject.FindGameObjectWithTag("CritterManager");
+        lineRenderer.enabled = LogicManager.SharedInstance.showLines;
 
         visionToggle = GameObject.FindGameObjectWithTag("VisionToggle").GetComponent<Button>();
         visionToggle.onClick.AddListener(ToggleLineRenderer);
 
-        // toggle the initial state of line renderer to avoid desync when critters spawn
-        //EnvironmentManager manager = GameObject.FindGameObjectWithTag("EnvironmentManager").GetComponent<EnvironmentManager>();
         
     }
 }

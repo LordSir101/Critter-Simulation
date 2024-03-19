@@ -6,4 +6,10 @@ public class PlayerGameInfo
 {
    public static int currSpeciesNum = 0;
    public static Color chosenColor = new Color32(0, 0, 0, 0);
+
+   public static void Reset()
+   {
+      currSpeciesNum = 0;
+      chosenColor = new Color32(0, 0, 0, 0);
+   }
 }

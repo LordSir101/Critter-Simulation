@@ -8,7 +8,7 @@ public class UIManager : MonoBehaviour
 {
     public CritterManager critterManager;
     [SerializeField] CritterBuilder critterBuilder;
-    public EnvironmentManager environmentManager;
+    //public LogicManager logicManager;
 
     public GameObject speciesCountUI;
     
@@ -16,6 +16,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI knowledgeDisplay;
 
     [SerializeField] private GameObject preview; // prefab of Images in the shape of critters
+    [SerializeField] private SpeciesKnowledgePoints speciesKnowledgePoints;
 
     public int day;
     [SerializeField] private Transform[] countElements = new Transform [10];
@@ -46,7 +47,7 @@ public class UIManager : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
-        
+        if(PauseControl.gameIsPaused){return;}
         UpdateSpeciesCountUI();
         DisplayInfo();
         
@@ -69,7 +70,7 @@ public class UIManager : MonoBehaviour
     public void DisplayInfo()
     {
         dayDisplay.text = "Day: " + day;
-        knowledgeDisplay.text = SpeciesKnowledgePoints.SharedInstance.GetKnowledgeOfSpecies(PlayerGameInfo.currSpeciesNum).ToString();
+        knowledgeDisplay.text = speciesKnowledgePoints.GetKnowledgeOfSpecies(PlayerGameInfo.currSpeciesNum).ToString();
     }
 
      public GameObject GetPooledPreview()

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
+using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -12,6 +13,7 @@ public class CritterManager : MonoBehaviour
     [SerializeField] private GameObject critterTemplate;
     [SerializeField] private GameObject carnivoreTemplate;
     [SerializeField] private UIManager uIManager;
+    [SerializeField] private SpeciesKnowledgePoints speciesKnowledgePoints;
 
     private int numInitialSpecies = 4;
     private int numSpeciesExisted = 4;
@@ -68,7 +70,7 @@ public class CritterManager : MonoBehaviour
         }
 
         // Create the player made critters
-        mapSize = EnvironmentManager.SharedInstance.mapSize;
+        mapSize = LogicManager.SharedInstance.mapSize;
         buffer = 5;
         width = (int)mapSize[0] / 2;
         height = (int)mapSize[1] / 2;
@@ -80,7 +82,7 @@ public class CritterManager : MonoBehaviour
         // Generate random critters to populate the world
         for(int i = 1; i < numInitialSpecies; i++){
 
-            (int speed, int sense, int breed) = GenerateRandomCritter();
+            (int speed, int sense, int breed) = GenerateRandomCritter(3,9);
 
             for(int j = 0; j < numInitialCrittersToSpawn; j++)
             {
@@ -114,18 +116,22 @@ public class CritterManager : MonoBehaviour
         return critterPoolPool[speciesNum];
     }
 
-    (int,int,int) GenerateRandomCritter()
+    (int,int,int) GenerateRandomCritter(int minSize, int maxSize)
     {
         //random starting stats.  Maximum of 9 stats total
         //each stat is guaranteed a chance at having a value of 2 or more
         //each stat will be at least 1;
-        int speed = UnityEngine.Random.Range(0,6);
-        int sense = UnityEngine.Random.Range(0,8 - speed);
-        int breed = UnityEngine.Random.Range(0,10 - speed - sense);
+        // int speed = UnityEngine.Random.Range(0,6);
+        // int sense = UnityEngine.Random.Range(0,8 - speed);
+        // int breed = UnityEngine.Random.Range(0,10 - speed - sense);
+
+        int speed = UnityEngine.Random.Range(0, maxSize - (int) Math.Floor(maxSize / 3d));
+        int sense = UnityEngine.Random.Range(0, maxSize - speed);
+        int breed = UnityEngine.Random.Range(0, maxSize - speed - sense);
         int size = speed + sense + breed;
 
         // randomly add 1 stat until the size is at least 3
-        while(size < 3)
+        while(size < minSize)
         {
             int[]stats = {speed, sense, breed};
             stats[UnityEngine.Random.Range(0,3)]++;
@@ -170,9 +176,13 @@ public class CritterManager : MonoBehaviour
             // If the species is extinct, remove it from tables
             if(speciesCount[critter.GetComponent<Critter>().speciesNum] == 0)
             {
+                if(critter.GetComponent<Critter>().speciesNum == PlayerGameInfo.currSpeciesNum)
+                {
+                    LogicManager.SharedInstance.EndGame();
+                }
                 speciesCount.Remove(critter.GetComponent<Critter>().speciesNum);
                 critterPoolPool.Remove(critter.GetComponent<Critter>().speciesNum);
-                SpeciesKnowledgePoints.SharedInstance.RemoveSpecies(critter.GetComponent<Critter>().speciesNum);
+                speciesKnowledgePoints.RemoveSpecies(critter.GetComponent<Critter>().speciesNum);
                 // Update the species count UI to reflect that a species is dead
                 uIManager.BuildCritterCountUI();
             }
@@ -182,28 +192,32 @@ public class CritterManager : MonoBehaviour
         }       
     }
 
-    public void SpawnCarnivores(int speed, int sense, int breed, int energyToSpawnWith, int numToSpawn)
+    public void SpawnCarnivores(int size, int energyToSpawnWith, int numToSpawn) //int speed, int sense, int breed
     {
         numSpeciesExisted++;
         int newSpeciesNum = numSpeciesExisted;
-        speciesCount.Add(newSpeciesNum, 0);
-        colors.Add(newSpeciesNum, Color.white);
 
-        critterPoolPool.Add(newSpeciesNum, new List<GameObject>());
+        (int speed, int sense, int breed) = GenerateRandomCritter(size, size);
 
-        GameObject tmp;
-        for(int i = 0; i < amountToPool; i++)
-        {
-            tmp = Instantiate(carnivoreTemplate);
-            tmp.SetActive(false);
-            critterPoolPool[newSpeciesNum].Add(tmp);
-        }
+        SpawnNewSpecies(newSpeciesNum, numToSpawn, speed, sense, breed, energyToSpawnWith, Color.white, carnivoreTemplate);
 
-        for(int i = 0; i < numToSpawn; i++){
-            CritterBirth(speed, sense, breed, newSpeciesNum, Color.white, carnivoreTemplate, energyToSpawnWith);
-        }
+        // speciesCount.Add(newSpeciesNum, 0);
+        // colors.Add(newSpeciesNum, Color.white);
+        // critterPoolPool.Add(newSpeciesNum, new List<GameObject>());
 
-        uIManager.BuildCritterCountUI();
+        // GameObject tmp;
+        // for(int i = 0; i < amountToPool; i++)
+        // {
+        //     tmp = Instantiate(carnivoreTemplate);
+        //     tmp.SetActive(false);
+        //     critterPoolPool[newSpeciesNum].Add(tmp);
+        // }
+
+        // for(int i = 0; i < numToSpawn; i++){
+        //     CritterBirth(speed, sense, breed, newSpeciesNum, Color.white, carnivoreTemplate, energyToSpawnWith);
+        // }
+
+        // uIManager.BuildCritterCountUI();
     }
 
     public void EvolveFromCritter(GameObject critterToEvolveFrom)
@@ -244,27 +258,28 @@ public class CritterManager : MonoBehaviour
 
         Color32 newColor = ModifyColor(critterToEvolveFrom.GetComponent<CritterInformationDisplay>().color);
 
-        speciesCount.Add(newSpeciesNum, 0);
-        colors.Add(newSpeciesNum, newColor);
-        critterPoolPool.Add(newSpeciesNum, new List<GameObject>());
+        // speciesCount.Add(newSpeciesNum, 0);
+        // colors.Add(newSpeciesNum, newColor);
+        // critterPoolPool.Add(newSpeciesNum, new List<GameObject>());
+        SpawnNewSpecies(newSpeciesNum, numInitialCrittersToSpawn, newSpeed, newSense, newBreed, critter.energy /2, newColor, critterTemplate);
 
-        GameObject tmp;
-        for(int i = 0; i < amountToPool; i++)
-        {
-            tmp = Instantiate(critterTemplate);
-            tmp.SetActive(false);
-            critterPoolPool[newSpeciesNum].Add(tmp);
-        }
+        // GameObject tmp;
+        // for(int i = 0; i < amountToPool; i++)
+        // {
+        //     tmp = Instantiate(critterTemplate);
+        //     tmp.SetActive(false);
+        //     critterPoolPool[newSpeciesNum].Add(tmp);
+        // }
 
         //Debug.Log(newColor);
 
-        for(int i = 0; i < numInitialCrittersToSpawn; i++)
-        {
-            CritterBirth(newSpeed, newSense, newBreed, newSpeciesNum, newColor, critterTemplate, critter.energy /2);
-        }
+        // for(int i = 0; i < numInitialCrittersToSpawn; i++)
+        // {
+        //     CritterBirth(newSpeed, newSense, newBreed, newSpeciesNum, newColor, critterTemplate, critter.energy /2);
+        // }
 
-        // update ui to include new species
-        uIManager.BuildCritterCountUI();
+        // // update ui to include new species
+        // uIManager.BuildCritterCountUI();
         
     }
 
@@ -300,9 +315,31 @@ public class CritterManager : MonoBehaviour
                 dir = -1;
             }
             oldColorComponents[i] = oldColorComponents[i] + amountToModify * dir;
-            
         }
 
         return new Color32((byte)oldColorComponents[0], (byte)oldColorComponents[1], (byte)oldColorComponents[2], 255);
+    }
+
+    void SpawnNewSpecies(int speciesNum, int numToSpawn, int speed, int sense, int breed, int startingEnergy, Color color, GameObject prefab)
+    {
+        speciesCount.Add(speciesNum, 0);
+        colors.Add(speciesNum, color);
+        critterPoolPool.Add(speciesNum, new List<GameObject>());
+
+        GameObject tmp;
+        for(int i = 0; i < amountToPool; i++)
+        {
+            tmp = Instantiate(prefab);
+            tmp.SetActive(false);
+            critterPoolPool[speciesNum].Add(tmp);
+        }
+
+        for(int i = 0; i < numToSpawn; i++)
+        {
+            CritterBirth(speed, sense, breed, speciesNum, color, prefab, startingEnergy);
+        }
+
+        // update ui to include new species
+        uIManager.BuildCritterCountUI();
     }
 }
