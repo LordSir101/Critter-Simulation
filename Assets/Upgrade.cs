@@ -15,6 +15,10 @@ public enum StatToUpgrade
     speedScale,
     senseScale,
     breedScale,
+    energyUsageInterval,
+    breedInterval,
+    maxChildren,
+    amountOfEnergyToSteal,
     none
 }
 

@@ -31,8 +31,9 @@ public class UpgradePanelManager : MonoBehaviour
     public void ShowUpgradeMenu(List<Upgrade> possibleUpgrades)
     {
         PauseControl.PauseGame(true);
+        Debug.Log(possibleUpgrades.Count);
 
-        for(int i = 0; i < buttons.Count; i++)
+        for(int i = 0; i < possibleUpgrades.Count; i++)
         {
             buttons[i].SetData(possibleUpgrades[i]);
         }
@@ -42,6 +43,11 @@ public class UpgradePanelManager : MonoBehaviour
 
     public void CloseUpgradeMenu()
     {
+        for(int i = 0; i < buttons.Count; i++)
+        {
+            buttons[i].gameObject.SetActive(false);
+        }
+        warning.gameObject.SetActive(false);
         upgradeMenu.SetActive(false);
         PauseControl.PauseGame(false);
     }

@@ -50,23 +50,31 @@ public class UpgradeManager : MonoBehaviour
 
             speciesKnowledgePoints.UseKnowledgePoints(PlayerGameInfo.currSpeciesNum, selectedUpgrade.cost);
 
+            upgradePool.Remove(selectedUpgrade);
+
             return true;
         }
+
     }
 
     public List<Upgrade> GetSelectableUpgrades(int count)
     {
-        List<Upgrade> upgrades = new List<Upgrade>();
+        Debug.Log("--------------------------------------");
+        List<Upgrade> chosenUpgrades = new List<Upgrade>();
+        List<Upgrade> pool = new List<Upgrade>(upgradePool);
 
-        if(count > upgradePool.Count)
+        if(count > pool.Count)
         {
-            count = upgradePool.Count;
+            count = pool.Count;
         }
         for(int i = 0; i < count; i++)
         {
-            upgrades.Add(upgradePool[Random.Range(0, upgradePool.Count)]);
+            int index = Random.Range(0, pool.Count);
+            chosenUpgrades.Add(pool[index]);
+            pool.Remove(pool[index]);
         }
-        return upgrades;
+
+        return chosenUpgrades;
     }
 
     private void UpdateAquiredUpgradesTable()

@@ -55,9 +55,12 @@ public class LogicManager : MonoBehaviour
     {
         // if(day == 1 && !firstWaveSpawned )
         // {
-        //     SpawnCarnivores();
+        //     //SpawnCarnivores();
         //     firstWaveSpawned = true;
+        //     StartUpgrade();
         // }
+        
+        
 
         if(Time.time - timeElapsed >= dayLength)
         {

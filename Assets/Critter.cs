@@ -18,6 +18,7 @@ public class Critter : MonoBehaviour
     public int breed;
     public int baseBreed = 1;
     protected float breedScale = 2f;
+    protected float maxChildren = 1;
 
     public int size;
     public int speciesNum;
@@ -26,7 +27,13 @@ public class Critter : MonoBehaviour
     // Lifespan
     public int energy = 80;
     protected float timeOfLastEnergyConsumption;
-    protected int energyUsageInterval = 6;
+    protected float energyUsageInterval = 6;
+    protected float energyStealRate = 2;
+    protected float timeLastEnergyStolen;
+    protected float amountOfEnergyToSteal = 0;
+
+    protected float timeOfLastBreed;
+    protected float breedInterval = 6;
 
     // Food
     protected Vector3 targetFoodPos;
@@ -42,6 +49,10 @@ public class Critter : MonoBehaviour
             "speedScale" => speedScale,
             "senseScale" => senseScale,
             "breedScale" => breedScale,
+            "energyUsageInterval" => energyUsageInterval,
+            "breedInterval" => breedInterval,
+            "maxChildren" => maxChildren,
+            "amountOfEnergyToSteal" => amountOfEnergyToSteal,
             _ => throw new IndexOutOfRangeException()
         };
         set {
@@ -49,6 +60,10 @@ public class Critter : MonoBehaviour
                 case "speedScale": speedScale = value; break;
                 case "senseScale": senseScale = value; break;
                 case "breedScale": breedScale = value; break;
+                case "energyUsageInterval": energyUsageInterval = value; break;
+                case "breedInterval": breedInterval = value; break;
+                case "maxChildren": maxChildren = value; break;
+                case "amountOfEnergyToSteal": amountOfEnergyToSteal = value; break;
                 default: throw new IndexOutOfRangeException();
             }
         }
@@ -67,8 +82,11 @@ public class Critter : MonoBehaviour
         ScanForFood();
         
         if(Time.time - timeOfLastEnergyConsumption >= energyUsageInterval){
-            AttemptBreed();
             UseEnergy();
+        }
+
+        if(Time.time - timeOfLastBreed >= breedInterval){
+            AttemptBreed();
         }
     }
 
@@ -157,16 +175,41 @@ public class Critter : MonoBehaviour
     private void AttemptBreed()
     {
         //each point in breed gives approx "breed scale" % extra chance to breed
-        float chance = UnityEngine.Random.Range(0,100) - ((breed+baseBreed) * breedScale);
+        float chance = UnityEngine.Random.Range(0,101) - ((breed+baseBreed) * breedScale);
 
         if (chance < 1) {
-            int evolveChance = UnityEngine.Random.Range(0,100);
+            int evolveChance = UnityEngine.Random.Range(0,101);
             if(evolveChance <= 3)
             {
                 CritterManager.SharedInstance.EvolveFromCritter(gameObject);
             }
             energy -= energy/2;
+
             CritterManager.SharedInstance.CritterBirth(speed, sense, breed, speciesNum, gameObject.GetComponent<CritterInformationDisplay>().color, gameObject, energy);
+
+            // For every child after the first, it has a 10% chance of being created increased by breed stat
+            for(int i = 0; i < maxChildren - 1; i++)
+            {
+                chance = UnityEngine.Random.Range(0,11) - (breed+baseBreed);
+                if (chance < 1)
+                {
+                    CritterManager.SharedInstance.CritterBirth(speed, sense, breed, speciesNum, gameObject.GetComponent<CritterInformationDisplay>().color, gameObject, energy);
+                }
+            }
+        }
+
+        timeOfLastBreed = Time.time;
+    }
+
+    void StealEnergy(Collision2D collision)
+    {
+        if(amountOfEnergyToSteal > 0 && Time.time - timeLastEnergyStolen >= energyStealRate)
+        {
+            Critter target = collision.gameObject.GetComponent<Critter>();
+            target.energy -= (int) amountOfEnergyToSteal;
+            energy += (int) amountOfEnergyToSteal;
+            Debug.Log("EnergyStolen:" + amountOfEnergyToSteal);
+            timeLastEnergyStolen = Time.time;
         }
     }
     
@@ -175,6 +218,15 @@ public class Critter : MonoBehaviour
         size = speed + sense + breed;
         targetFood = FoodSpawner.SharedInstance.getMovementTarget(gameObject, transform.position);
         targetFoodPos = targetFood.transform.position;
+        timeLastEnergyStolen = Time.time;
+    }
+
+    protected void OnCollisionEnter2D(Collision2D collision) {
+        gameObject.GetComponent<Animation>().AnimateCollisionState();
+
+        // A critter can steal energy with certain upgrades
+        StealEnergy(collision);
+        
     }
 
 }

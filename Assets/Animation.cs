@@ -20,13 +20,11 @@ public class Animation : MonoBehaviour
         
     }
 
-    protected void OnCollisionEnter2D(Collision2D collision) {
-        AnimateCollisionState();
+
+    public void AnimateCollisionState(){
         timeOfCollsion = Time.time;
         inCollisionState = true;
-    }
 
-    protected void AnimateCollisionState(){
         Transform[] transform = gameObject.GetComponentsInChildren<Transform>();
 
         foreach(Transform part in transform){
