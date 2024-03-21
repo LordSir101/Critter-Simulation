@@ -18,5 +18,6 @@ public class UpgradeButton : MonoBehaviour
         description.text = upgrade.description;
         upgradeName.text = upgrade.upgradeName;
         cost.text = upgrade.cost.ToString();
+        gameObject.SetActive(true);
     }
 }
