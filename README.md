@@ -1,4 +1,4 @@
-#Simulated Environment
+# Simulated Environment
 
 Made in Unity. The player creates a creature, and it competes with other randomly created creatures for food. Creatures have a chance to breed and evolve. Predators will spawn and try to eat other creatures.
 
